@@ -24,6 +24,10 @@ using System.Collections.Generic;
 using MixedReality.Toolkit.Input;
 using MagicLeap.MRTK.Settings;
 
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+using MagicLeap.Android;
+#endif
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -125,7 +129,13 @@ namespace MagicLeap.MRTK.Input
             CleanupEditorDeviceInstances();
 #endif
             // Create new instances only if running on MagicLeap and hand tracking is granted
-            if (MLPermissions.CheckPermission(MLPermission.HandTracking).IsOk)
+            bool handTrackingPermissionGranted = false;
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+            handTrackingPermissionGranted = Permissions.CheckPermission(MLPermission.HandTracking);
+#else
+            handTrackingPermissionGranted = MLPermissions.CheckPermission(MLPermission.HandTracking).IsOk;
+#endif
+            if (handTrackingPermissionGranted)
             {
                 MagicLeapAuxiliaryHandDevice leftHand = InputSystem.AddDevice<MagicLeapAuxiliaryHandDevice>(
                     $"{nameof(MagicLeapAuxiliaryHandDevice)} - {CommonUsages.LeftHand}");

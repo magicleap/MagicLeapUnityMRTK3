@@ -193,6 +193,10 @@ PrefabInstance:
       propertyPath: interactable
       value: 
       objectReference: {fileID: 741303817076928446}
+    - target: {fileID: 1252942324030379005, guid: 6d114d8c9f4193b45b685f408022743e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -326,6 +330,14 @@ PrefabInstance:
       propertyPath: interactable
       value: 
       objectReference: {fileID: 6238907357288344744}
+    - target: {fileID: 5432849605706098210, guid: 6d114d8c9f4193b45b685f408022743e, type: 3}
+      propertyPath: materialPropertiesFoldedOut
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7229505736223864398, guid: 6d114d8c9f4193b45b685f408022743e, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -455,6 +467,10 @@ PrefabInstance:
       propertyPath: interactable
       value: 
       objectReference: {fileID: 6991366723213677428}
+    - target: {fileID: 1252942324030379005, guid: 6d114d8c9f4193b45b685f408022743e, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

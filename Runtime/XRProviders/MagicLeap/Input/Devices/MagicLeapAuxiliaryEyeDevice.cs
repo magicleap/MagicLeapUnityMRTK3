@@ -22,6 +22,11 @@ using Unity.XR.CoreUtils;
 using MixedReality.Toolkit;
 using System.Collections.Generic;
 using MagicLeap.MRTK.Settings;
+
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+using MagicLeap.Android;
+#endif
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -189,7 +194,13 @@ namespace MagicLeap.MRTK.Input
 
         private static void CheckPermissionAndCreateDeviceIfOK()
         {
-            if (MLPermissions.CheckPermission(MLPermission.EyeTracking).IsOk)
+            bool eyeTrackingPermissionGranted = false;
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+            eyeTrackingPermissionGranted = Permissions.CheckPermission(MLPermission.EyeTracking);
+#else
+            eyeTrackingPermissionGranted = MLPermissions.CheckPermission(MLPermission.EyeTracking).IsOk;
+#endif
+            if (eyeTrackingPermissionGranted)
             {
                 // Permission is granted, create the eye input device.
                 CreateDevice();

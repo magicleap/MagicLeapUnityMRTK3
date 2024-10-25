@@ -54,5 +54,7 @@ namespace MagicLeap.MRTK.Input
         }
 
         protected static HandsAggregatorSubsystem HandSubsystem => XRSubsystemHelpers.HandsAggregator as HandsAggregatorSubsystem;
+        protected static readonly float PinchClosedThreshold = 0.97f;
+        protected static readonly float PinchOpenThreshold = 0.95f;
     }
 }

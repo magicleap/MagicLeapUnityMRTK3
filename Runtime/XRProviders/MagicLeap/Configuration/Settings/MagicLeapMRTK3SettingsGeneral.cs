@@ -62,7 +62,9 @@ namespace MagicLeap.MRTK.Settings
                  "and segmented dimmer results. " +
                  "Note, this feature may not work well when used in combination with any post-processing " +
                  "effects, like HDR, which may need to be disabled to use this setting.")]
+#pragma warning disable CS0414 // Field assigned but never used warning
         private bool keepRenderedAlpha = true;
+#pragma warning restore CS0414
         // Not exposing a public property for KeepRenderedAlpha at this time as this option may go away with OpenXR.
 
         /// <inheritdoc/>

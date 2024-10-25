@@ -24,28 +24,28 @@ namespace MagicLeap.MRTK.Samples.SpatialAwareness
 
         void Start()
         {
-            checkSpatialMappingPermissionStatus();
-            StartCoroutine(pollStatus());
+            CheckSpatialMappingPermissionStatus();
+            StartCoroutine(PollStatus());
         }
 
-        private IEnumerator pollStatus()
+        private IEnumerator PollStatus()
         {
             while (true)
             {
-                checkSpatialMappingPermissionStatus();
+                CheckSpatialMappingPermissionStatus();
                 yield return new WaitForSeconds(1f);
             }
         }
 
-        private void checkSpatialMappingPermissionStatus()
+        private void CheckSpatialMappingPermissionStatus()
         {
             MLResult spatialMappingPermResult = MLPermissions.CheckPermission(MLPermission.SpatialMapping);
             bool isGranted = spatialMappingPermResult.IsOk ? true : false;
-            setVisualColor(isGranted);
-            setStatusMessage(spatialMappingPermResult.Result.ToString());
+            SetVisualColor(isGranted);
+            SetStatusMessage(spatialMappingPermResult.Result.ToString());
         }
 
-        private void setVisualColor(bool isGranted)
+        private void SetVisualColor(bool isGranted)
         {
             if (permissionVisual != null)
             {
@@ -57,7 +57,7 @@ namespace MagicLeap.MRTK.Samples.SpatialAwareness
             }
         }
 
-        private void setStatusMessage(string message)
+        private void SetStatusMessage(string message)
         {
             if (statusMessage != null)
             {

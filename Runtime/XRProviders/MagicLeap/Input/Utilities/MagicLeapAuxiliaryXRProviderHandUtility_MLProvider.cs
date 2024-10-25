@@ -90,9 +90,6 @@ namespace MagicLeap.MRTK.Input
         private static (InputDevice, InputDevice) MLGesturesHands = (new XRInputDevice(), new XRInputDevice());
         private static (bool, bool) MLPinchedLastFrame = (false, false);
 
-        private const float PinchClosedThreshold = 0.97f;
-        private const float PinchOpenThreshold = 0.95f;
-
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Register()
         {

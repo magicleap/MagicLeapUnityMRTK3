@@ -12,15 +12,18 @@ using System;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.XR.Management;
+using System.Linq;
 using UnityEngine.XR.MagicLeap;
 
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
 using UnityEngine.XR.OpenXR;
 using UnityEngine.XR.OpenXR.Features.MagicLeapSupport;
 #endif
 
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.XR.Management;
 #endif
 
 namespace MagicLeap.MRTK.Settings
@@ -47,7 +50,7 @@ namespace MagicLeap.MRTK.Settings
         private MagicLeapMRTK3SettingsRigConfig rigConfig = null;
 #endif
 
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
         [SerializeField]
         private MagicLeapMRTK3SettingsOpenXRGeneral openXRGeneralSettings = null;
 
@@ -66,7 +69,7 @@ namespace MagicLeap.MRTK.Settings
 
         private static Lazy<bool> MagicLeapOpenXRFeatureEnabled = new(() =>
         {
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
             MagicLeapFeature mlOpenXRFeature = OpenXRSettings.Instance.GetFeature<MagicLeapFeature>();
             return mlOpenXRFeature != null ? mlOpenXRFeature.enabled : false;
 #else
@@ -86,7 +89,7 @@ namespace MagicLeap.MRTK.Settings
                 yield return generalSettings;
                 yield return rigConfig;
 #endif
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
                 yield return openXRGeneralSettings;
                 yield return openXRRigConfig;
 #endif
@@ -180,7 +183,7 @@ namespace MagicLeap.MRTK.Settings
             ValidateSettingsObject(ref generalSettings);
             ValidateSettingsObject(ref rigConfig);
 #endif
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
             ValidateSettingsObject(ref openXRGeneralSettings);
             ValidateSettingsObject(ref openXRRigConfig);
 #endif
@@ -188,7 +191,6 @@ namespace MagicLeap.MRTK.Settings
 
 #if UNITY_EDITOR
             serializedObject = new SerializedObject(this);
-            SelectedXRProvider = default;
 #endif
         }
 
@@ -207,7 +209,7 @@ namespace MagicLeap.MRTK.Settings
 #if UNITY_XR_MAGICLEAP_PROVIDER
             MagicLeap,
 #endif
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
             OpenXR,
 #endif
         }
@@ -228,11 +230,17 @@ namespace MagicLeap.MRTK.Settings
             ValidateSettingsObjectInEditor(ref generalSettings);
             ValidateSettingsObjectInEditor(ref rigConfig);
 #endif
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
             ValidateSettingsObjectInEditor(ref openXRGeneralSettings);
             ValidateSettingsObjectInEditor(ref openXRRigConfig);
 #endif
             ValidateSettingsObjectInEditor(ref permissionsConfig);
+
+            // Validate selected XR Provider
+            if (!Enum.IsDefined(typeof(XRProviderOption), SelectedXRProvider))
+            {
+                SelectedXRProvider = default;
+            }
         }
 
         private void ValidateSettingsObjectInEditor<T>(ref T settingsObject) where T : MagicLeapMRTK3SettingsObject
@@ -254,7 +262,7 @@ namespace MagicLeap.MRTK.Settings
             LoadDefault(ref generalSettings);
             LoadDefault(ref rigConfig);
 #endif
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
             LoadDefault(ref openXRGeneralSettings);
             LoadDefault(ref openXRRigConfig);
 #endif
@@ -297,6 +305,24 @@ namespace MagicLeap.MRTK.Settings
             }
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        /// <summary>
+        /// Utility method to determine if a specific XR Provider is selected for a build target group.
+        /// </summary>
+        /// <typeparam name="T">The type of <see cref="XRLoaderHelper"/>.</typeparam>
+        /// <param name="target">The <see cref="BuildTargetGroup"/></param>
+        /// <returns><see langword="true"/> if the XR Provider is selected for the build target group, otherwise <see langword="false"/>.</returns>
+        public static bool IsXRProviderSelectedForBuildTarget<T>(BuildTargetGroup target) where T : XRLoaderHelper
+        {
+            var settings = XRGeneralSettingsPerBuildTarget.XRGeneralSettingsForBuildTarget(target);
+
+            if (settings != null && settings.AssignedSettings != null)
+            {
+                return settings.AssignedSettings.activeLoaders.Any(loader => loader is T);
+            }
+
+            return false;
         }
 
 #endif // UNITY_EDITOR

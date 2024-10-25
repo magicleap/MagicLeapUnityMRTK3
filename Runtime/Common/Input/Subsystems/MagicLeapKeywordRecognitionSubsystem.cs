@@ -16,9 +16,16 @@ using UnityEngine.Scripting;
 using UnityEngine.XR.MagicLeap;
 using UnityEngine.Events;
 using System.Collections.Concurrent;
-using System.Threading;
-using UnityEditor;
+
 using MagicLeap.MRTK.Settings;
+#if UNITY_ANDROID && !UNITY_EDITOR
+
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+using MagicLeap.Android;
+#endif
+
+using System.Threading;
+#endif
 
 namespace MagicLeap.MRTK.Input
 {
@@ -65,7 +72,13 @@ namespace MagicLeap.MRTK.Input
                 eventQueue = new ConcurrentQueue<UnityEvent>();
                 intentID = 1;
                 voiceConfigDirty = false;
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+                mlVoicePermissionGranted = Permissions.CheckPermission(MLPermission.VoiceInput);
+#else
                 mlVoicePermissionGranted = MLPermissions.CheckPermission(MLPermission.VoiceInput).IsOk;
+#endif
                 mlVoiceEnabled = JavaUtils.GetSystemSetting<int>("getInt", "enable_voice_cmds") == 1;
                 if (!MLVoiceReady)
                 {
@@ -77,14 +90,11 @@ namespace MagicLeap.MRTK.Input
                     {
                         mainSyncContext.Post(_ =>
                         {
-#if UNITY_EDITOR
-                            if (!EditorApplication.isPlaying)
-                            {
-                                timer.Stop();
-                                return;
-                            }
-#endif
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+                            mlVoicePermissionGranted = Permissions.CheckPermission(MLPermission.VoiceInput);
+#else
                             mlVoicePermissionGranted = MLPermissions.CheckPermission(MLPermission.VoiceInput).IsOk;
+#endif
                             mlVoiceEnabled = JavaUtils.GetSystemSetting<int>("getInt", "enable_voice_cmds") == 1;
                             if (MLVoiceReady)
                             {
@@ -93,6 +103,8 @@ namespace MagicLeap.MRTK.Input
                         }, null);
                     };
                 }
+#endif
+
             }
 
             /// <inheritdoc/>

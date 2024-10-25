@@ -14,35 +14,46 @@ namespace MagicLeap.MRTK.Samples.SpatialAwareness
 {
     public class MeshingOptionsMenu : MonoBehaviour
     {
-        public MeshingController MeshingController;
+        [SerializeField] private GameObject meshingObject;
+
+        private MeshingController meshingController;
 
         void Start()
         {
-            if (MeshingController == null)
+            if (meshingObject == null)
             {
                 enabled = false;
-                Debug.LogWarning("MeshingController is null, disabling script");
                 return;
+            }
+
+            // Sets the enabled MeshingController, corresponding to the XR Loader
+            MeshingController[] controllers = meshingObject.GetComponentsInChildren<MeshingController>();
+            foreach(MeshingController controller in controllers)
+            {
+                if (controller.enabled)
+                {
+                    meshingController = controller;
+                }
             }
         }
 
         public void OnToggleChanged(int selectedToggle)
         {
-            if (MeshingController == null)
+            if (meshingController == null)
             {
                 return;
             }
             if (selectedToggle == 0)
             {
-                MeshingController.SetRenderer(MeshingController.RenderMode.Wireframe);
+                meshingController.SetRenderer(MeshingController.RenderMode.Wireframe);
             }
             else if (selectedToggle == 1)
             {
-                MeshingController.SetRenderer(MeshingController.RenderMode.Colored);
+                meshingController.SetRenderer(MeshingController.RenderMode.Colored);
             }
             else
             {
-                MeshingController.SetRenderer(MeshingController.RenderMode.Occlusion);
+                meshingController.SetRenderer(MeshingController.RenderMode.Occlusion);
             }
         }
     }

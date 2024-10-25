@@ -1,20 +1,31 @@
 # Magic Leap MRTK3 Package
 
-This package adds support for Magic Leap devices when using the
-Mixed Reality Toolkit 3 (MRTK3).
+This package enables and provides utilities for MRTK3 development on the Magic Leap 2.
 
-## Current Status
+## Features
 
-| Feature | Status |
+| Input Support | *Description* |
 |--|--|
-| Controller | Pre-Release |
-| Hand Tracking | Pre-Release |
-| Eye Tracking | Pre-Release |
-| Keyword Recognition | Pre-Release |
+| ML2 Controller | *Support for the Magic Leap 2 Controller, with rig interactor prefab and visual model.* |
+| Hand Tracking | *Support for hand tracking, with options to choose the hand ray type and multimodal mode when used in conjunction with the ML2 Controller.* |
+| Eye Tracking | *Support for eye tracking and eye gaze interactions.* |
+| Keyword Recognition | *Support for MRTK3's Keyword Recognition Subsystem, along with "See it, Say it" labels.* |
 
-### Important Note
+| Utilities | *Description* |
+|--|--|
+| Magic Leap Settings | *Our settings provide various options and utilities to make development easier on the Magic Leap 2.  This includes things like automatic permission requests and runtime configuration of the default MRTK rig for input compatibility and optimization on ML2.* |
+| StereoConvergenceDetector | *A utility prefab that can be used in a scene to assist in detecting the user's focus point (what they are looking at) and setting Magic Leap 2's camera focus distance.  Setting the focus distance properly provides better capture alignment along with reducing "judder" on device.  Located in `/Runtime/Common/Prefabs/StereoConvergenceDetector/`.* |
+| TrackedHandJointVisualizer | *A utility prefab to visualize the tracked hand joints with labeled keypoints.  Located in `/Runtime/Common/Prefabs/TrackedHandJointVisuals/`.* |
 
-This package is an early access version. This means features are still in active development and subject to changes or even having their implementation completely removed and done in a different way.
+
+| Samples | *Description* |
+|--|--|
+| Hand And Controller Interaction Examples | *Demonstrates both hand and Magic Leap 2 Controller interactions at the same time.* |
+| Eye Tracking Examples | *Demonstrates eye tracking and eye gaze interactions.* |
+| Spatial Awareness Examples | *Demonstrates scene reconstruction with meshing, along with options for mesh visualization.* |
+| Keyword Recognition Examples | *Demonstrates MRTK3's Keyword Recognition Subsystem working on the Magic Leap 2.* |
+| Global and Segmented Dimmer Examples | *Demonstrates Magic Leap 2's global and segmented dimmer features, along with dynamic options for control.* |
+| Stereo Convergence Detector Examples | *Demonstrates the StereoConvergenceDetector utility and the effect of focus distance.* |
 
 ## Prerequisites
 
@@ -23,7 +34,7 @@ This package is an early access version. This means features are still in active
 
 ## Getting Started
 
-Before importing the Magic Leap MRTK3 Early Access Package, developers will need to configure their project for MRTK3. This section provides general guidance on downloading and installing the MRTK3 packages using the Mixed Reality Feature tool (Windows Only) or using the MRTK3 Dev Template Project.
+Before importing the Magic Leap MRTK3 Package, developers will need to configure their project for MRTK3. This section provides general guidance on downloading and installing the MRTK3 packages using the Mixed Reality Feature tool (Windows Only) or using the MRTK3 Dev Template Project.
 
 ### Using the MRTK Dev Template Project
 
@@ -77,11 +88,22 @@ This section provides instructions on installing the MRTK3 dependencies into an 
 
 To learn more see Microsoft's [Starting from a new project](https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/getting-started/setting-up/setup-new-project) guide.
 
-## Importing the MRTK3 Magic Leap Package
+## Importing the Magic Leap MRTK3 Package
 
-Once the project is configured for ML2 and has the required MRTK3 packages, import the provided MRTK3 Magic Leap package into the project.
+Once the project is configured for ML2 and has the required MRTK3 packages, import the Magic Leap MRTK3 package into the project.
 
-Open the Package Manager (**Window** > **Package Manager**) and import the `com.magicleap.mrtk3.tgz` package. Select the **＋** icon then select **Add package from tarball...**
+### Importing from the NPMJS package registry
+
+Add the NPMJS scoped registry to your project.
+
+- URL:  http://registry.npmjs.org
+- Scope(s): com.magicleap
+
+Import the `Magic Leap MRTK3` package with the Package Manager (**Window** > **Package Manager**) under **Packages: My Registries**, or include the package directly in the manifest.json, e.g. `"com.magicleap.mrtk3": "1.0.0",`.
+
+### Importing from the Magic Leap Hub
+
+Install the latest version of the Unity MRTK3 package from the Magic Leap Hub. Then from the Package Manager (**Window** > **Package Manager**), import the `com.magicleap.mrtk3.tgz` package that was installed from the Hub. Select the **＋** icon then select **Add package from tarball...** and choose the path used by the Magic Leap Hub to import the package into the project.
 
 ## Project Setup with XR Providers
 
@@ -98,7 +120,7 @@ If the project contains the **com.unity.xr.magicleap** package, you can use the 
    2. Select the `Magic Leap` provider in the list.  Make sure this is the only selected XR Provider for Android.
 
 3. Within project settings, go to the **MRTK3** category on the left.
-   1. Set the **Profile** to **MRTKProfile-MagicLeap**, found at `Packages/com.magicleap.mrtk3/Runtime/XRProviders/MagicLeap/Configuration/Default Profiles/`.
+   1. Set the **Profile** to **MRTKProfile-MagicLeap**, found at `/Runtime/XRProviders/MagicLeap/Configuration/Default Profiles/`.
 
 4. Configure the MRTK XR Rig to be compatible with Magic Leap 2 input (2 provided options).
    1. First option:  Use the Runtime MRTK XR Rig Configuration option in settings.
@@ -106,7 +128,7 @@ If the project contains the **com.unity.xr.magicleap** package, you can use the 
       - Make sure the `Magic Leap` option is selected for **Settings for XR Provider:** at the top to view specific settings for the Magic Leap XR Provider.
       - Check the `Runtime Rig Config Enabled` checkbox at the top of the **Runtime MRTK XR Rig Configuration** window.
          - Enabling this feature will allow the default MRTK XR Rig to work with ML2 input without needing to modify the scene.
-   2. Second option:  In your scenes, remove and replace the default MRTK XR Rig with the `MRTK XR Rig - MagicLeap` prefab variant located in `Packages/com.magicleap.mrtk3/Runtime/XRProviders/MagicLeap/Prefabs/MRTK_Variants/`.
+   2. Second option:  In your scenes, remove and replace the default MRTK XR Rig with the `MRTK XR Rig - MagicLeap` prefab variant located in `/Runtime/XRProviders/MagicLeap/Prefabs/MRTK_Variants/`.
 
 ### OpenXR XR Provider Setup
 
@@ -134,7 +156,7 @@ If the project contains the **com.unity.xr.openxr** package (version 1.9.1 or la
       - Note:  If Microsoft's OpenXR package is also in the project, make sure Microsoft's `Hand Tracking` feature is **not** selected.
 
 4. Within project settings, go to the **MRTK3** category on the left.
-   1. Set the **Profile** to **MRTKProfile-MagicLeap-OpenXR**, found at `Packages/com.magicleap.mrtk3/Runtime/XRProviders/OpenXR/Configuration/Default Profiles/`.
+   1. Set the **Profile** to **MRTKProfile-MagicLeap-OpenXR**, found at `/Runtime/XRProviders/OpenXR/Configuration/Default Profiles/`.
 
 5. Configure the MRTK XR Rig to be compatible with Magic Leap 2 input (2 provided options).
    1. First option:  Use the Runtime MRTK XR Rig Configuration option in settings.
@@ -142,7 +164,7 @@ If the project contains the **com.unity.xr.openxr** package (version 1.9.1 or la
       - Make sure the `OpenXR` option is selected for **Settings for XR Provider:** at the top to view specific settings for the OpenXR XR Provider.
       - Check the `Runtime Rig Config Enabled` checkbox at the top of the **Runtime MRTK XR Rig Configuration** window.
          - Enabling this feature will allow the default MRTK XR Rig to work with ML2 input without needing to modify the scene.
-   2. Second option:  In your scenes, remove and replace the default MRTK XR Rig with the `MRTK XR Rig - MagicLeap - OpenXR` prefab variant located in `Packages/com.magicleap.mrtk3/Runtime/XRProviders/OpenXR/Prefabs/MRTK_Variants/`.
+   2. Second option:  In your scenes, remove and replace the default MRTK XR Rig with the `MRTK XR Rig - MagicLeap - OpenXR` prefab variant located in `/Runtime/XRProviders/OpenXR/Prefabs/MRTK_Variants/`.
 
 ## Magic Leap Permissions
 

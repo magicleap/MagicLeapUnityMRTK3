@@ -1,7 +1,7 @@
 {
     "name": "com.magicleap.mrtk3",
     "displayName": "Magic Leap MRTK3",
-    "version": "1.0.0-pre.7.1",
+    "version": "1.0.0",
     "unity": "2022.2",
     "description": "This package enables and provides utilities for MRTK3 development on the Magic Leap 2.",
     "keywords": [
@@ -52,6 +52,11 @@
         "displayName": "Global and Segmented Dimmer Examples",
         "description": "Example scene demonstrating the global and segmented dimmer.",
         "path": "Samples~/GlobalAndSegmentedDimmerExamples"
+      },
+      {
+        "displayName": "Stereo Convergence Detector Examples",
+        "description": "Example scene demonstrating the Stereo Convergence Detector.",
+        "path": "Samples~/StereoConvergenceDetectorExamples"
       }
     ]
 }

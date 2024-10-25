@@ -25,4 +25,4 @@ MonoBehaviour:
       value: {fileID: 11400000, guid: c45788af2ca823a4a904bf8762ff126d, type: 2}
     - key:
         reference: MixedReality.Toolkit.Input.MRTKHandsAggregatorSubsystem, MixedReality.Toolkit.Input
-      value: {fileID: 11400000, guid: b8da41358d218754494ea49599e7b0fb, type: 2}
+      value: {fileID: 11400000, guid: 3686750d09885054e91d6d17260afbae, type: 2}

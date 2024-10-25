@@ -8,7 +8,7 @@
 // ---------------------------------------------------------------------
 // %BANNER_END%
 
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
 using UnityEngine;
 using UnityEngine.XR.MagicLeap;
 
@@ -45,4 +45,4 @@ namespace MagicLeap.MRTK.Settings
 
     }
 }
-#endif // UNITY_OPENXR_1_9_0_OR_NEWER
+#endif // UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER

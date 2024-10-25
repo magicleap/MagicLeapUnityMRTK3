@@ -15,7 +15,7 @@ using MixedReality.Toolkit.Subsystems;
 using UnityEngine.XR;
 using TMPro;
 
-namespace MagicLeap.MRTK
+namespace MagicLeap.MRTK.Utilities
 {
     /// <summary>
     /// Simple MRTK TrackedHandJoint visualizer to verify proper joint bindings.

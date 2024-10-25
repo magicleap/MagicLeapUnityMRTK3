@@ -16,6 +16,10 @@ using UnityEngine.XR.MagicLeap;
 using static UnityEngine.XR.MagicLeap.InputSubsystem.Extensions;
 using MLHands = UnityEngine.XR.MagicLeap.InputSubsystem.Extensions.MLHandTracking;
 
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+using MagicLeap.Android;
+#endif
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -98,11 +102,20 @@ namespace MagicLeap.MRTK.Settings
         private GameObject permissionCallbackHandler = null;
         public GameObject PermissionCallbackHandler => permissionCallbackHandler;
 
+        public event Action<string> PermissionGranted = null;
+        public event Action<string> PermissionDenied = null;
+        public event Action<string> PermissionDeniedAndDontAskAgain = null;
+
         /// <inheritdoc/>
         public override bool CompatibleWithActiveXRLoader => true;
 
+        private List<string> dangerousPermissionsRequestList = new List<string>();
+        private bool dangerousPermissionsRequestComplete = false;
 
+#if !MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
         private MLPermissions.Callbacks permissionCallbacks = null;
+#endif
+
         private IPermissionCallbackHandler permissionCallbackHandlerInstance = null;
 
 #if UNITY_EDITOR
@@ -225,35 +238,51 @@ namespace MagicLeap.MRTK.Settings
         /// <inheritdoc/>
         public override void ProcessOnAfterSceneLoad()
         {
-            // Handle dangerous permissions
+            // Handle auto requested dangerous permissions
             if (AutoRequestDangerousPermissionsEnabled)
             {
-                // Instantiate the callback prefab
-                if (permissionCallbackHandler != null && permissionCallbackHandlerInstance == null)
-                {
-                    GameObject permissionPrefab = GameObject.Instantiate(PermissionCallbackHandler, Camera.main.transform);
-                    if (permissionPrefab != null)
-                    {
-                        permissionCallbackHandlerInstance = permissionPrefab.GetComponent<IPermissionCallbackHandler>();
-                    }
-                }
                 foreach (PermissionConfig dangerousPermission in DangerousPermissions)
                 {
                     if (dangerousPermission.enabled)
                     {
-                        // Setup callbacks for dangerous permission request
-                        if (permissionCallbacks == null)
+                        // Add our auto requested permissions to the list.
+                        if (!dangerousPermissionsRequestList.Contains(dangerousPermission.permission))
                         {
-                            permissionCallbacks = new MLPermissions.Callbacks();
-                            permissionCallbacks.OnPermissionGranted += OnDangerousPermissionGranted;
-                            permissionCallbacks.OnPermissionDenied += OnDangerousPermissionDenied;
-                            permissionCallbacks.OnPermissionDeniedAndDontAskAgain += OnDangerousPermissionDeniedAndDontAskAgain;
+                            dangerousPermissionsRequestList.Add(dangerousPermission.permission);
                         }
-                        // Request the permission
-                        RequestDangerousPermission(dangerousPermission.permission);
                     }
                 }
             }
+
+            // Instantiate the callback prefab
+            if (permissionCallbackHandler != null &&
+                permissionCallbackHandlerInstance == null &&
+                dangerousPermissionsRequestList.Count > 0)
+            {
+                GameObject permissionPrefab = GameObject.Instantiate(PermissionCallbackHandler, Camera.main.transform);
+                if (permissionPrefab != null)
+                {
+                    permissionCallbackHandlerInstance = permissionPrefab.GetComponent<IPermissionCallbackHandler>();
+                }
+            }
+
+            // Request all dangerous permissions, manually added and auto requested.
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+            RequestDangerousPermissions();
+#else
+            foreach (string dangerousPermission in dangerousPermissionsRequestList) {
+                // Setup callbacks for dangerous permission request
+                if (permissionCallbacks == null)
+                {
+                    permissionCallbacks = new MLPermissions.Callbacks();
+                    permissionCallbacks.OnPermissionGranted += OnDangerousPermissionGranted;
+                    permissionCallbacks.OnPermissionDenied += OnDangerousPermissionDenied;
+                    permissionCallbacks.OnPermissionDeniedAndDontAskAgain += OnDangerousPermissionDeniedAndDontAskAgain;
+                }
+                RequestDangerousPermission(dangerousPermission);
+            }
+#endif
+            dangerousPermissionsRequestComplete = true;
 
             // Handle normal permissions
             foreach (PermissionConfig normalPermission in NormalPermissions)
@@ -265,10 +294,52 @@ namespace MagicLeap.MRTK.Settings
             }
         }
 
+        /// <summary>
+        /// Provides for manual addition of a dangerous permission to be requested at runtime during application startup.
+        /// This method must be called during Awake() of the first loaded scene in order
+        /// to have the request be included and requested.
+        /// </summary>
+        /// <param name="permission">The permission to add to the list of dangerous permissions to be requested at startup.</param>
+        /// <returns><see langword="true"/> if the permission was added to the list, <see langword="false"/> if not.</returns>
+        public bool AddDangerousPermissionToRequest(string permission)
+        {
+            //[NOTE] This call is only supported at runtime.
+            if (!Application.isPlaying)
+            {
+                return false;
+            }
+
+            // We've already requested dangerous permissions, return early.
+            if (dangerousPermissionsRequestComplete)
+            {
+                Debug.LogWarning("MagicLeapMRTK3SettingsPermissionsConfig: Dangerous permissions have already been requested. " +
+                                 "Manual addition of dangerous permissions must be requested at runtime during Awake().");
+                return false;
+            }
+
+            if (!dangerousPermissionsRequestList.Contains(permission))
+            {
+                dangerousPermissionsRequestList.Add(permission);
+                return true;
+            }
+
+            return true;
+        }
+
+#if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
+        private void RequestDangerousPermissions()
+        {
+            if (dangerousPermissionsRequestList.Count > 0)
+            {
+                Permissions.RequestPermissions(dangerousPermissionsRequestList.ToArray(), OnDangerousPermissionGranted, OnDangerousPermissionDenied, OnDangerousPermissionDeniedAndDontAskAgain);
+            }
+        }
+#else
         private void RequestDangerousPermission(string permission)
         {
             MLPermissions.RequestPermission(permission, permissionCallbacks);
         }
+#endif
 
         private void OnDangerousPermissionGranted(string permission)
         {
@@ -284,6 +355,7 @@ namespace MagicLeap.MRTK.Settings
             {
                 permissionCallbackHandlerInstance.OnPermissionGranted(permission);
             }
+            PermissionGranted?.Invoke(permission);
             Debug.Log("Permission Granted: " + permission);
         }
 
@@ -293,6 +365,7 @@ namespace MagicLeap.MRTK.Settings
             {
                 permissionCallbackHandlerInstance.OnPermissionDenied(permission);
             }
+            PermissionDenied?.Invoke(permission);
             Debug.LogWarning("Permission Denied: " + permission);
         }
 
@@ -302,6 +375,7 @@ namespace MagicLeap.MRTK.Settings
             {
                 permissionCallbackHandlerInstance.OnPermissionDeniedAndDontAskAgain(permission);
             }
+            PermissionDeniedAndDontAskAgain?.Invoke(permission);
             Debug.Log("Permission Denied and Dont Ask Again: " + permission);
         }
 

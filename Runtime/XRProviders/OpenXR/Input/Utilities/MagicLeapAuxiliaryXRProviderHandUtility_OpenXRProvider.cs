@@ -8,12 +8,17 @@
 // ---------------------------------------------------------------------
 // %BANNER_END%
 
-#if UNITY_OPENXR_1_9_0_OR_NEWER
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
 using System;
 using UnityEngine;
 using UnityEngine.XR;
 using UnityEngine.XR.MagicLeap;
 using MagicLeap.MRTK.Settings;
+using UnityEngine.InputSystem;
+using System.Linq;
+using InputDevice = UnityEngine.InputSystem.InputDevice;
+using HandInteractionDevice = UnityEngine.XR.OpenXR.Features.Interactions.HandInteractionProfile.HandInteraction;
+using CommonUsages = UnityEngine.InputSystem.CommonUsages;
 
 namespace MagicLeap.MRTK.Input
 {
@@ -34,16 +39,19 @@ namespace MagicLeap.MRTK.Input
         /// <inheritdoc/>
         public override bool TryGetPinch(XRNode handNode, out bool isPinching, out float pinchAmount)
         {
-            ref bool pinchedLastFrame = ref (handNode == XRNode.LeftHand ? ref MRTKPinchLastFrame.Item1 : ref MRTKPinchLastFrame.Item2);
-
-            // Under OpenXR, for now, just utilize MRTK's pinch detection.
-            // ML OS pinch logic will be incorporated into OpenXR at a later date.
-            if (HandSubsystem.TryGetPinchProgress(handNode, out _, out _, out pinchAmount))
+            ref HandInteractionDevice handInteractionDevice = ref (handNode == XRNode.LeftHand ? ref HandInteractionDevices.Item1 : ref HandInteractionDevices.Item2);
+            ref bool pinchedLastFrame = ref (handNode == XRNode.LeftHand ? ref OpenXRPinchLastFrame.Item1 : ref OpenXRPinchLastFrame.Item2);
+            if (handInteractionDevice != null && handInteractionDevice.added)
             {
-                // Debounce pinch
-                isPinching = pinchAmount >= (pinchedLastFrame ? MRTKPinchOpenThreshold : MRTKPinchClosedThreshold);
-                pinchedLastFrame = isPinching;
-                return true;
+                bool pinchReady = handInteractionDevice.pinchReady.ReadValue() == 1.0f;
+                if (pinchReady)
+                {
+                    pinchAmount = handInteractionDevice.pinchValue.ReadValue();
+                    // Debounce pinch
+                    isPinching = pinchAmount >= (pinchedLastFrame ? PinchOpenThreshold : PinchClosedThreshold);
+                    pinchedLastFrame = isPinching;
+                    return true;
+                }
             }
 
             pinchedLastFrame = isPinching = false;
@@ -52,9 +60,9 @@ namespace MagicLeap.MRTK.Input
         }
 
 
-        private static (bool, bool) MRTKPinchLastFrame = (false, false);
-        private const float MRTKPinchClosedThreshold = 1.0f;
-        private const float MRTKPinchOpenThreshold = 0.85f;
+        private static (bool, bool) OpenXRPinchLastFrame = (false, false);
+
+        private static (HandInteractionDevice, HandInteractionDevice) HandInteractionDevices = (null, null);
 
         private static readonly Lazy<MagicLeapMRTK3SettingsOpenXRGeneral> GeneralSettings = new(() =>
         {
@@ -71,8 +79,49 @@ namespace MagicLeap.MRTK.Input
 
             var instance = new MagicLeapAuxiliaryXRProviderHandUtility_OpenXRProvider();
             MagicLeapAuxiliaryHandUtils.RegisterXRProviderHandUtility(instance);
+            InputSystem.onDeviceChange += OnInputDeviceChange;
+        }
+
+        private static void OnInputDeviceChange(InputDevice device, InputDeviceChange change)
+        {
+            switch(change)
+            {
+                case InputDeviceChange.Added:
+                    if (device is HandInteractionDevice)
+                    {
+                        if (device.usages.Contains(CommonUsages.LeftHand))
+                        {
+                            HandInteractionDevices.Item1 = device as HandInteractionDevice;
+                        }
+
+                        if (device.usages.Contains(CommonUsages.RightHand))
+                        {
+                            HandInteractionDevices.Item2 = device as HandInteractionDevice;
+                        }
+                    }
+                    break;
+                case InputDeviceChange.Removed:
+                    // Copies of the HandInteraction device get added and removed from the system as it starts up.
+                    // Only clear the reference if its the active device.
+                    if (device is HandInteractionDevice)
+                    {
+                        if (device.usages.Contains(CommonUsages.LeftHand) &&
+                            device == HandInteractionDevices.Item1)
+                        {
+                            HandInteractionDevices.Item1 = null;
+                        }
+
+                        if (device.usages.Contains(CommonUsages.RightHand) &&
+                            device == HandInteractionDevices.Item2)
+                        {
+                            HandInteractionDevices.Item2 = null;
+                        }
+                    }
+                    break;
+                default : break;
+            }
         }
     }
 }
-#endif // UNITY_OPENXR_1_9_0_OR_NEWER
+#endif // UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
 

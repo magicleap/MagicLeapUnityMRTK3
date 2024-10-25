@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.0.0
+### Features
+
+- Incorporated better pinch detection and then retention when hand keypoints become occluded.
+- Added a `StereoConvergenceDetector` utility prefab to assist in utilizing Magic Leap's camera focus distance feature, which provides better capture alignment along with reduction/removal of "judder" on device in some scenarios.  Please see the **Stereo Convergence Detector Examples** for a demonstration of the feature.
+- The **Spatial Awareness Examples** sample was updated to work when using the OpenXR provider.
+
+### Bugfixes
+
+- Fixed an issue where the `Setting for XR Provider` choice dropdown in **Edit** > **Project Settings** > **MRTK3** > **Magic Leap Settings** was potentially getting reset when re-visiting the page.  This didn't affect any options, just may have been undesirable.
+
 ## 1.0.0-pre.7.1
 ### Bugfixes
 
