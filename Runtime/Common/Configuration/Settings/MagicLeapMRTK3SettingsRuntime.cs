@@ -19,36 +19,69 @@ namespace MagicLeap.MRTK.Settings
     {
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        static void OnBeforeSceneLoad()
+        private static void OnBeforeSceneLoad()
         {
-            if (!MagicLeapMRTK3Settings.RuntimeIsCompatible())
-            {
-                return;
-            }
-
-            foreach (var settingsObject in MagicLeapMRTK3Settings.Instance.SettingsObjects)
-            {
-                if (settingsObject.CompatibleWithActiveXRLoader)
-                {
-                    settingsObject.ProcessOnBeforeSceneLoad();
-                }
-            }
+            ProcessSettings(RuntimeInitializeLoadType.BeforeSceneLoad);
         }
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void OnAfterSceneLoad()
         {
+            ProcessSettings(RuntimeInitializeLoadType.AfterSceneLoad);
+        }
+
+        private static void ProcessSettings(RuntimeInitializeLoadType runtimeInitType)
+        {
+            // Settings that don't require ML2 Runtime
+            foreach (var settingsObject in MagicLeapMRTK3Settings.Instance.SettingsObjects)
+            {
+                if (!settingsObject.RequiresML2Runtime)
+                {
+                    ProcessSetting(settingsObject, runtimeInitType);
+                }
+            }
+
             if (!MagicLeapMRTK3Settings.RuntimeIsCompatible())
             {
                 return;
             }
 
+            // Settings that require ML2 runtime but are not dependent on XR Providers
             foreach (var settingsObject in MagicLeapMRTK3Settings.Instance.SettingsObjects)
             {
-                if (settingsObject.CompatibleWithActiveXRLoader)
+                if (settingsObject.RequiresML2Runtime &&
+                    !settingsObject.DependentOnXRProvider)
                 {
-                    settingsObject.ProcessOnAfterSceneLoad();
+                    ProcessSetting(settingsObject, runtimeInitType);
                 }
+            }
+
+            // Settings that require ML2 runtime and are dependent & compatible with XR Provider
+            foreach (var settingsObject in MagicLeapMRTK3Settings.Instance.SettingsObjects)
+            {
+                if (settingsObject.RequiresML2Runtime &&
+                    settingsObject.DependentOnXRProvider &&
+                    settingsObject.CompatibleWithActiveXRLoader)
+                {
+                    ProcessSetting(settingsObject, runtimeInitType);
+                }
+            }
+        }
+
+        private static void ProcessSetting(
+            MagicLeapMRTK3SettingsObject settingsObject,
+            RuntimeInitializeLoadType runtimeInitType)
+        {
+            switch (runtimeInitType)
+            {
+                case RuntimeInitializeLoadType.BeforeSceneLoad:
+                    settingsObject.ProcessOnBeforeSceneLoad();
+                    break;
+                case RuntimeInitializeLoadType.AfterSceneLoad:
+                    settingsObject.ProcessOnAfterSceneLoad();
+                    break;
+                default:
+                    break;
             }
         }
     }

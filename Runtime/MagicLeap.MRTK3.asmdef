@@ -71,6 +71,16 @@
             "name": "org.mixedrealitytoolkit.input",
             "expression": "4.0.0-development.pre.1",
             "define": "MRTK_INPUT_4_0_0_OR_NEWER"
+        },
+        {
+            "name": "com.magicleap.unitysdk",
+            "expression": "2.4.0-pre.1",
+            "define": "MAGICLEAP_UNITY_SDK_2_4_0_OR_NEWER"
+        },
+        {
+            "name": "com.magicleap.unitysdk",
+            "expression": "2.5.0-pre.1",
+            "define": "MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER"
         }
     ],
     "noEngineReferences": false

@@ -46,6 +46,16 @@ namespace MagicLeap.MRTK.Settings
         private uint version = SettingsFileVersion;
         public uint Version => version;
 
+        // Common settings
+
+        [SerializeField]
+        private MagicLeapMRTK3SettingsUnityEditor editorSettings = null;
+
+        [SerializeField]
+        private MagicLeapMRTK3SettingsPermissionsConfig permissionsConfig = null;
+
+        // XR Provider dependent settings
+
 #if UNITY_XR_MAGICLEAP_PROVIDER
         [SerializeField]
         private MagicLeapMRTK3SettingsGeneral generalSettings = null;
@@ -61,9 +71,6 @@ namespace MagicLeap.MRTK.Settings
         [SerializeField]
         private MagicLeapMRTK3SettingsOpenXRRigConfig openXRRigConfig = null;
 #endif
-
-        [SerializeField]
-        private MagicLeapMRTK3SettingsPermissionsConfig permissionsConfig = null;
 
         private static Lazy<bool> DeviceNameContainsMagicLeap = new(() =>
         {
@@ -89,6 +96,13 @@ namespace MagicLeap.MRTK.Settings
         {
             get
             {
+                // Common settings
+
+                yield return editorSettings;
+                yield return permissionsConfig;
+
+                // XR Provider dependent settings
+
 #if UNITY_XR_MAGICLEAP_PROVIDER
                 yield return generalSettings;
                 yield return rigConfig;
@@ -97,7 +111,6 @@ namespace MagicLeap.MRTK.Settings
                 yield return openXRGeneralSettings;
                 yield return openXRRigConfig;
 #endif
-                yield return permissionsConfig;
             }
         }
 
@@ -183,6 +196,9 @@ namespace MagicLeap.MRTK.Settings
         private void OnEnable()
         {
             // Deserialization has occurred at this point, so validate settings objects.
+            ValidateSettingsObject(ref editorSettings);
+            ValidateSettingsObject(ref permissionsConfig);
+            
 #if UNITY_XR_MAGICLEAP_PROVIDER
             ValidateSettingsObject(ref generalSettings);
             ValidateSettingsObject(ref rigConfig);
@@ -191,7 +207,6 @@ namespace MagicLeap.MRTK.Settings
             ValidateSettingsObject(ref openXRGeneralSettings);
             ValidateSettingsObject(ref openXRRigConfig);
 #endif
-            ValidateSettingsObject(ref permissionsConfig);
 
 #if UNITY_EDITOR
             serializedObject = new SerializedObject(this);
@@ -207,6 +222,12 @@ namespace MagicLeap.MRTK.Settings
         }
 
 #if UNITY_EDITOR
+
+        internal enum SettingsObjectType
+        {
+            Common,
+            XRProviderDependent
+        }
 
         public enum XRProviderOption
         {
@@ -230,6 +251,9 @@ namespace MagicLeap.MRTK.Settings
         /// </summary>
         public void Initialize()
         {
+            ValidateSettingsObjectInEditor(ref editorSettings);
+            ValidateSettingsObjectInEditor(ref permissionsConfig);
+
 #if UNITY_XR_MAGICLEAP_PROVIDER
             ValidateSettingsObjectInEditor(ref generalSettings);
             ValidateSettingsObjectInEditor(ref rigConfig);
@@ -238,7 +262,6 @@ namespace MagicLeap.MRTK.Settings
             ValidateSettingsObjectInEditor(ref openXRGeneralSettings);
             ValidateSettingsObjectInEditor(ref openXRRigConfig);
 #endif
-            ValidateSettingsObjectInEditor(ref permissionsConfig);
 
             // Validate selected XR Provider
             if (!Enum.IsDefined(typeof(XRProviderOption), SelectedXRProvider))
@@ -262,6 +285,9 @@ namespace MagicLeap.MRTK.Settings
         /// </summary>
         public void LoadDefaults()
         {
+            LoadDefault(ref editorSettings);
+            LoadDefault(ref permissionsConfig);
+
 #if UNITY_XR_MAGICLEAP_PROVIDER
             LoadDefault(ref generalSettings);
             LoadDefault(ref rigConfig);
@@ -270,7 +296,6 @@ namespace MagicLeap.MRTK.Settings
             LoadDefault(ref openXRGeneralSettings);
             LoadDefault(ref openXRRigConfig);
 #endif
-            LoadDefault(ref permissionsConfig);
         }
 
         private void LoadDefault<T>(ref T settingsObject) where T : MagicLeapMRTK3SettingsObject
@@ -299,16 +324,64 @@ namespace MagicLeap.MRTK.Settings
         {
             serializedObject.Update();
 
-            foreach (var settingsObject in SettingsObjects)
+            // Load Defaults Button
+            if (GUILayout.Button("Load Defaults", GUILayout.Width(100)))
             {
-                if (settingsObject.CompatibleWithSelectedXRProviderInEditor(SelectedXRProvider))
-                {
-                    settingsObject.OnGUI();
-                    EditorGUILayout.Space(20);
-                }
+                LoadDefaults();
             }
+            EditorGUILayout.Space(8);
+
+            // Draw common settings first
+            OnGUI(SettingsObjectType.Common);
+
+            GUILayout.BeginVertical(new GUIStyle("Window") { padding = new RectOffset(20, 20, 20, 0) });
+
+            // XR Provider Settings Dropdown
+            float originalLabelWidth = EditorGUIUtility.labelWidth;
+            const string XRProviderLabel = "Settings For XR Provider:";
+            EditorGUIUtility.labelWidth = EditorStyles.label.CalcSize(new GUIContent(XRProviderLabel)).x + 10.0f;
+            SelectedXRProvider = (XRProviderOption)EditorGUILayout.EnumPopup(XRProviderLabel, SelectedXRProvider, GUILayout.Width(EditorGUIUtility.labelWidth + 100));
+            EditorGUIUtility.labelWidth = originalLabelWidth;
+            EditorGUILayout.Space(16);
+
+            // Draw XR provider dependent settings
+            OnGUI(SettingsObjectType.XRProviderDependent);
+
+            GUILayout.EndVertical();
+
+            GUILayout.FlexibleSpace();
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        internal void OnGUI(SettingsObjectType type)
+        {
+            switch (type)
+            {
+                case SettingsObjectType.Common:
+                    foreach (var settingsObject in SettingsObjects)
+                    {
+                        if (!settingsObject.DependentOnXRProvider)
+                        {
+                            settingsObject.OnGUI();
+                            EditorGUILayout.Space(20);
+                        }
+                    }
+                    break;
+                case SettingsObjectType.XRProviderDependent:
+                    foreach (var settingsObject in SettingsObjects)
+                    {
+                        if (settingsObject.DependentOnXRProvider &&
+                            settingsObject.CompatibleWithSelectedXRProviderInEditor(SelectedXRProvider))
+                        {
+                            settingsObject.OnGUI();
+                            EditorGUILayout.Space(20);
+                        }
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
 
         /// <summary>

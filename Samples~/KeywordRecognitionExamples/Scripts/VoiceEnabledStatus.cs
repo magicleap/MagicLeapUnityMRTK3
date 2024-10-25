@@ -21,11 +21,13 @@ namespace MagicLeap.MRTK.Samples.KeywordRecognition
         [SerializeField]
         private GameObject statusMessage;
 
+#if  !UNITY_EDITOR && UNITY_ANDROID
         void Start()
         {
             checkVoiceInputEnabled();
             StartCoroutine(pollStatus());
         }
+#endif
 
         private IEnumerator pollStatus()
         {

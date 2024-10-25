@@ -3,7 +3,8 @@
     "rootNamespace": "",
     "references": [
         "MagicLeap.MRTK3",
-        "Unity.XR.CoreUtils"
+        "Unity.XR.CoreUtils",
+        "MixedReality.Toolkit.Core.Editor"
     ],
     "includePlatforms": [
         "Editor"

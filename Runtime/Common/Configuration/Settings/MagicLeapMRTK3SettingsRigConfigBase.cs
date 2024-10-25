@@ -94,6 +94,12 @@ namespace MagicLeap.MRTK.Settings
         private bool disableUnboundedTrackingMode = true;
         public bool DisableUnboundedTrackingMode => disableUnboundedTrackingMode;
 
+        /// <inheritdoc/>
+        public override bool RequiresML2Runtime => true;
+
+        /// <inheritdoc/>
+        public override bool DependentOnXRProvider => true;
+
 #if UNITY_EDITOR
 
         /// <inheritdoc/>

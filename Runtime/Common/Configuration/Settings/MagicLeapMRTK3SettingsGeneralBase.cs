@@ -17,7 +17,7 @@ using UnityEditor;
 namespace MagicLeap.MRTK.Settings
 {
     /// <summary>
-    /// Provides the base implementation for general settings.
+    /// Provides the base implementation for general settings of an XR specific settings object.
     /// </summary>
     public abstract class MagicLeapMRTK3SettingsGeneralBase : MagicLeapMRTK3SettingsObject
     {
@@ -42,6 +42,12 @@ namespace MagicLeap.MRTK.Settings
         /// The hand controller multimodal type option.
         /// </summary>
         public HandControllerMultimodalTypeOption HandControllerMultimodalType => handControllerMultimodalType;
+
+        /// <inheritdoc/>
+        public override bool RequiresML2Runtime => true;
+
+        /// <inheritdoc/>
+        public override bool DependentOnXRProvider => true;
 
 #if UNITY_EDITOR
 

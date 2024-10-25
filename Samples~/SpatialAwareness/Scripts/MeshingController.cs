@@ -64,12 +64,18 @@ namespace MagicLeap.MRTK.Samples.SpatialAwareness
 
         protected virtual void Start()
         {
-            inputSubsystem.trackingOriginUpdated += OnTrackingOriginChanged;
+            if (inputSubsystem != null)
+            {
+                inputSubsystem.trackingOriginUpdated += OnTrackingOriginChanged;
+            }
         }
 
         protected virtual void OnDestroy()
         {
-            inputSubsystem.trackingOriginUpdated -= OnTrackingOriginChanged;
+            if (inputSubsystem != null)
+            {
+                inputSubsystem.trackingOriginUpdated -= OnTrackingOriginChanged;
+            }
         }
 
         /// <summary>

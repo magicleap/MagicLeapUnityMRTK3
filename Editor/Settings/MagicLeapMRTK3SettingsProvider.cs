@@ -42,22 +42,6 @@ namespace MagicLeap.MRTK.Settings
 
         public override void OnGUI(string searchContext)
         {
-            // Load Defaults Button
-            if (GUILayout.Button("Load Defaults", GUILayout.Width(100)))
-            {
-                MagicLeapMRTK3Settings.Instance.LoadDefaults();
-            }
-
-            // XR Provider Settings Dropdown
-            float originalLabelWidth = EditorGUIUtility.labelWidth;
-            const string XRProviderLabel = "Settings For XR Provider:";
-            EditorGUIUtility.labelWidth = EditorStyles.label.CalcSize(new GUIContent(XRProviderLabel)).x + 10.0f;
-            MagicLeapMRTK3Settings.Instance.SelectedXRProvider =
-                (MagicLeapMRTK3Settings.XRProviderOption) EditorGUILayout.EnumPopup(XRProviderLabel, MagicLeapMRTK3Settings.Instance.SelectedXRProvider);
-            EditorGUIUtility.labelWidth = originalLabelWidth;
-            EditorGUILayout.Space(8);
-
-            // Draw settings objects
             MagicLeapMRTK3Settings.Instance.OnGUI();
         }
     }

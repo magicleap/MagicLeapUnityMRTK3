@@ -17,6 +17,7 @@ This package enables and provides utilities for MRTK3 development on the Magic L
 
 | Name | *Description* |
 |--|--|
+| Magic Leap Input Simulator | *Provides Magic Leap specific input simulation (e.g. Controller) in the Unity Editor during play mode.  To use, either enable the setting to automatically add it to the scene in Editor play mode, or manually place the prefab in the scene. Located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Simulation<wbr>/<wbr>Prefabs/.* |
 | Magic Leap Settings | *Our settings provide various options and utilities to make development easier on the Magic Leap 2.  This includes things like automatic permission requests and runtime configuration of the default MRTK rig for input compatibility and optimization on ML2.* |
 | StereoConvergenceDetector | *A utility prefab that can be used in a scene to assist in detecting the user's focus point (what they are looking at) and setting Magic Leap 2's camera focus distance.  Setting the focus distance properly provides better capture alignment along with reducing "judder" on device.  Located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Prefabs<wbr>/<wbr>StereoConvergenceDetector/.* |
 | TrackedHandJointVisualizer | *A utility prefab to visualize the tracked hand joints with labeled keypoints.  Located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Prefabs<wbr>/<wbr>TrackedHandJointVisuals/.* |
@@ -45,9 +46,16 @@ Before importing the Magic Leap MRTK3 Package, developers will need to configure
 
 #### Ready-made ML2 port of the MRTK Dev Template Project
 
-There is a ready-made ML2 port of the MRTK Dev Template Project provided within the `mrtk3_MagicLeap2` branch in the [Magic Leap fork of the MRTK Github repository](https://github.com/magicleap/MixedRealityToolkit-Unity/tree/mrtk3_MagicLeap2).  This is the quickest and easiest way to get an MRTK3 app up and running on the Magic Leap 2.  To use the ported Dev Template project, clone the forked MRTK GitHub repo and check out the `mrtk3_MagicLeap2` branch. [Official Microsoft Guide Here] (https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/getting-started/setting-up/setup-template)
+There is a ready-made ML2 port of the MRTK Dev Template Project provided within several branch configurations in the [Magic Leap fork of the MRTK Github repository](https://github.com/magicleap/MixedRealityToolkit-Unity/tree/mrtk3_MagicLeap2).  This is the quickest and easiest way to get an MRTK3 app up and running on the Magic Leap 2.  To use the ported Dev Template project, clone the forked MRTK GitHub repo and check out the desired branch configuration (see below). [Official Microsoft Guide Here] (https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/getting-started/setting-up/setup-template)
 
-If you work with Git using the command line, you can clone the repo while specifying the mrtk3_MagicLeap2 branch: `git clone --branch mrtk3_MagicLeap2 https://github.com/magicleap/MixedRealityToolkit-Unity`
+There are several project configurations within the Magic Leap fork repository available in separate branches:
+
+- `mrtk3_MagicLeap2` - Default configuration using the legacy ML XR provider.
+- `mrtk3_MagicLeap2_OpenXR` - Project configuration using the OpenXR provider.
+- `mrtk3_MagicLeap2_Spectator` - Project configuration using the legacy ML XR provider, URP, and with integrated Magic Leap Spectator.
+- `mrtk3_MagicLeap2_OpenXR_Spectator` - Project configuration using the OpenXR provider, URP, and with integrated Magic Leap Spectator.
+
+If you work with Git using the command line, you can clone the repo while specifying the branch, e.g.: `git clone --branch mrtk3_MagicLeap2 https://github.com/magicleap/MixedRealityToolkit-Unity`
 
 #### Original MRTK Dev Template Project
 
@@ -151,7 +159,7 @@ If the project contains the **com.unity.xr.openxr** package (version 1.9.1 or la
    2. Select the `OpenXR` provider in the list.  Make sure this is the only selected XR Provider for Android.
       - Select the `Magic Leap Feature Group`.
    3. Select the **XR Plug-in Management** > **OpenXR** category on the left for more options.
-      - Set the **Depth Submission Mode** to `None`.
+      - Set the **Depth Submission Mode** to `Depth 16 Bit` or `None`. The `Depth 24 Bit` currently does not work on the ML2.
       - Make sure the following interaction profiles are added:
          - `Magic Leap 2 Controller Interaction Profile`
          - `Eye Gaze Interaction Profile`

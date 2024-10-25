@@ -114,7 +114,10 @@ namespace MagicLeap.MRTK.Settings
         public event Action<string> PermissionDeniedAndDontAskAgain = null;
 
         /// <inheritdoc/>
-        public override bool CompatibleWithActiveXRLoader => true;
+        public override bool RequiresML2Runtime => true;
+
+        /// <inheritdoc/>
+        public override bool DependentOnXRProvider => false;
 
         private List<string> dangerousPermissionsRequestList = new List<string>();
         private bool dangerousPermissionsRequestComplete = false;
@@ -129,12 +132,6 @@ namespace MagicLeap.MRTK.Settings
 
         /// <inheritdoc/>
         public override string SettingsWindowLabel => "Runtime Permissions Configuration";
-
-        /// <inheritdoc/>
-        public override bool CompatibleWithSelectedXRProviderInEditor(MagicLeapMRTK3Settings.XRProviderOption selectedXRProvider)
-        {
-            return true;
-        }
 
         /// <inheritdoc/>
         public override void DrawSettingsWindowContent()

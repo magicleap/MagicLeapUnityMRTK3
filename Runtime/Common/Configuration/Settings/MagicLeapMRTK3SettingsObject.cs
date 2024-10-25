@@ -32,27 +32,73 @@ namespace MagicLeap.MRTK.Settings
         public abstract void ProcessOnAfterSceneLoad();
 
         /// <summary>
+        /// Whether the settings object should operate only when detecting an ML2 runtime.
+        /// </summary>
+        /// <remarks>
+        /// On device, the settings object will operate only when the device is determined to be
+        /// an ML2.  In Editor play mode, the settings object will operate if a simulated ML2
+        /// runtime is detected.
+        /// </remarks>
+        public abstract bool RequiresML2Runtime { get; }
+
+        /// <summary>
+        /// Whether the settings object is dependent on a specific XR provider being active or not.
+        /// </summary>
+        public abstract bool DependentOnXRProvider { get; }
+
+        /// <summary>
         /// Whether the settings object is compatible with the active XR loader.
         /// </summary>
-        public abstract bool CompatibleWithActiveXRLoader { get; }
+        /// <remarks>
+        /// This property is used at runtime when the <see cref="DependentOnXRProvider"/> is true.
+        /// </remarks>
+        public virtual bool CompatibleWithActiveXRLoader => false;
 
 #if UNITY_EDITOR
+
+        [SerializeField]
+        [HideInInspector]
+        private bool windowedGUIExpanded = true;
+
+        private bool WindowedGUIExpanded
+        {
+            get => windowedGUIExpanded;
+            set
+            {
+                if (windowedGUIExpanded != value)
+                {
+                    windowedGUIExpanded = value;
+                    // Manually setting the field dirty to
+                    // ensure expand/collapse changes cause serialization.
+                    EditorUtility.SetDirty(this);
+                }
+            }
+        }
 
         /// <summary>
         /// The string to use for display of the settings window label.
         /// </summary>
+        /// <remarks>
+        /// Return an empty string if the settings GUI does not need to be windowed.
+        /// </remarks>
         public abstract string SettingsWindowLabel { get; }
 
         /// <summary>
         /// The string to use for the display of the XR provider label this settings object is valid for.
         /// Leave as empty string if valid for any.
         /// </summary>
+        /// <remarks>
+        /// This property is used in Editor when the <see cref="DependentOnXRProvider"/> is true.
+        /// </remarks>
         public virtual string SettingsXRProviderLabel => string.Empty;
 
         /// <summary>
         /// Whether the settings object is compatible with the selected XR loader in Editor.
         /// </summary>
-        public abstract bool CompatibleWithSelectedXRProviderInEditor(MagicLeapMRTK3Settings.XRProviderOption selectedXRProvider);
+        /// <remarks>
+        /// This method is used in Editor when the <see cref="DependentOnXRProvider"/> is true.
+        /// </remarks>
+        public virtual bool CompatibleWithSelectedXRProviderInEditor(MagicLeapMRTK3Settings.XRProviderOption selectedXRProvider) => false;
 
         /// <summary>
         /// SerializedObject representation in Editor.
@@ -71,23 +117,52 @@ namespace MagicLeap.MRTK.Settings
         {
             serializedObject.Update();
 
-            string xrProviderLabel = SettingsXRProviderLabel.Length > 0 ?
-                $"    <color=#888888>[XR Provider: <color=#888840>{SettingsXRProviderLabel}</color>]</color>" : "";
-            string windowLabel = $"<b>{SettingsWindowLabel}</b>{xrProviderLabel}\n";
-
-            // Begin Settings UI window
-            GUILayout.BeginVertical(windowLabel, new GUIStyle("Window") { richText = true });
+            // Display windowed content
+            if (SettingsWindowLabel.Length > 0)
             {
-                EditorGUILayout.Space(8);
+                // Begin Settings UI window
+                GUILayout.BeginVertical(new GUIStyle("Window") { padding = new RectOffset(8, 8, 8, 8) });
 
-                DrawSettingsWindowContent();
+                string xrProviderLabel = SettingsXRProviderLabel.Length > 0 ?
+                    $"    <color=#888888>[XR Provider: <color=#888840>{SettingsXRProviderLabel}</color>]</color>" : "";
+                string windowLabel = $"<b>{SettingsWindowLabel}</b>{xrProviderLabel}";
 
-                EditorGUILayout.Space(8);
+                // Foldout with label (rich text)
+                EditorGUILayout.BeginHorizontal();
+                WindowedGUIExpanded = EditorGUILayout.Foldout(WindowedGUIExpanded, "", true);
+
+                float originalLabelWidth = EditorGUIUtility.labelWidth;
+                EditorGUIUtility.labelWidth = EditorStyles.label.CalcSize(new GUIContent(windowLabel)).x + 10.0f;
+                EditorGUILayout.LabelField(windowLabel, new GUIStyle(EditorStyles.label) { richText = true, alignment = TextAnchor.UpperLeft });
+                EditorGUIUtility.labelWidth = originalLabelWidth;
+
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.EndHorizontal();
+
+                // Display expanded content
+                if (WindowedGUIExpanded)
+                {
+                    DrawSettingsGUI();
+                }
+
+                GUILayout.EndVertical();
             }
-            GUILayout.EndVertical();
+            // Display non-windowed content
+            else
+            {
+                DrawSettingsGUI();
+            }
+
             GUI.enabled = true;
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawSettingsGUI()
+        {
+            EditorGUILayout.Space(8);
+            DrawSettingsWindowContent();
+            EditorGUILayout.Space(8);
         }
 
         public abstract void DrawSettingsWindowContent();

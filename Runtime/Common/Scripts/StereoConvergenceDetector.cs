@@ -40,6 +40,14 @@ using MLPermissionStrings = MagicLeap.Android.Permissions;
 using MLPermissionStrings = UnityEngine.XR.MagicLeap.MLPermission;
 #endif
 
+#if MAGICLEAP_UNITY_SDK_2_4_0_OR_NEWER
+using MagicLeap.OpenXR.Features.EyeTracker;
+#endif
+
+#if MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER
+using UnityEngine.XR.OpenXR.NativeTypes;
+#endif
+
 #if UNITY_EDITOR
 using UnityEditor.XR.Management;
 #endif
@@ -173,6 +181,10 @@ namespace MagicLeap.MRTK.Utilities
         private GameObject hitPointVisual = null;
         private bool debugVisualsVisible = false;
         private Coroutine rayCastRoutine = null;
+#if MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER
+        private MagicLeapEyeTrackerFeature eyeTrackerFeature;
+        private bool eyeTrackerActive = false;
+#endif
         private InputDevice eyesDevice;
         private XROrigin xrOrigin = null;
         private Camera mainCamera = null;
@@ -253,6 +265,13 @@ namespace MagicLeap.MRTK.Utilities
                 mlInputs.Dispose();
                 mlInputs = null;
             }
+#if MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER
+            if (eyeTrackerFeature != null && eyeTrackerActive)
+            {
+                eyeTrackerFeature.DestroyEyeTracker();
+                eyeTrackerActive = false;
+            }
+#endif
         }
 
         private void InitializeReferences()
@@ -472,19 +491,56 @@ namespace MagicLeap.MRTK.Utilities
             // OpenXR
             if (MLDevice.IsOpenXRLoaderActive())
             {
+#if MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER
+                if (eyeTrackerFeature == null)
+                {
+                    eyeTrackerFeature = OpenXRSettings.Instance.GetFeature<MagicLeapEyeTrackerFeature>();
+                }
+                if (eyeTrackerFeature != null && eyeTrackerFeature.enabled && !eyeTrackerActive)
+                {
+                    eyeTrackerFeature.CreateEyeTracker();
+                    eyeTrackerActive = true;
+                }
+                if (eyeTrackerActive)
+                {
+                    EyeTrackerData eyeTrackerData = eyeTrackerFeature.GetEyeTrackerData();
+                    if (eyeTrackerData.PosesData.Result == XrResult.Success)
+                    {
+                        fixationPoint = eyeTrackerData.PosesData.FixationPose.Pose.position;
+                        return true;
+                    }
+                }
+#endif // MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER
+
 #if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
                 if (!eyesDevice.isValid)
                 {
                     List<InputDevice> inputDeviceList = new();
                     InputDevices.GetDevicesWithCharacteristics(InputDeviceCharacteristics.EyeTracking, inputDeviceList);
-                    eyesDevice = inputDeviceList.FirstOrDefault();
-
+#if MAGICLEAP_UNITY_SDK_2_4_0_OR_NEWER && !MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER
+                    eyesDevice = inputDeviceList.Find(device => device.name == MagicLeapEyeTrackerFeature.DeviceLocalizedName);
+                    if(!eyesDevice.isValid && eyeTrackingOption == EyeTrackingOptions.UseEyeFixationPointDirectlyAsFocusPoint)
+                    {
+                        Debug.LogError("The OpenXR ML Eye Tracker Device was not found, falling back to using the eye gaze direction for focus point.");
+                    }
+#endif // MAGICLEAP_UNITY_SDK_2_4_0_OR_NEWER && !MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER
                     if (!eyesDevice.isValid)
                     {
-                        return false;
+                        eyesDevice = inputDeviceList.FirstOrDefault();
+                        if (!eyesDevice.isValid)
+                        {
+                            return false;
+                        }
                     }
                 }
 
+#if MAGICLEAP_UNITY_SDK_2_4_0_OR_NEWER && !MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER
+                if (eyesDevice.TryGetFeatureValue(EyeTrackerUsages.vergencePosition, out Vector3 vergencePosition))
+                {
+                    fixationPoint = vergencePosition;
+                    return true;
+                }
+#endif // MAGICLEAP_UNITY_SDK_2_4_0_OR_NEWER && !MAGICLEAP_UNITY_SDK_2_5_0_OR_NEWER
                 if (eyesDevice.TryGetFeatureValue(CommonUsages.isTracked, out bool isTracked) &&
                     eyesDevice.TryGetFeatureValue(EyeTrackingUsages.gazePosition, out Vector3 position) &&
                     eyesDevice.TryGetFeatureValue(EyeTrackingUsages.gazeRotation, out Quaternion rotation))
@@ -494,9 +550,8 @@ namespace MagicLeap.MRTK.Utilities
                     fixationPoint = position + (rotation * Vector3.forward * OpenXRDefaultFixationDistance);
                     return true;
                 }
-#endif
+#endif // UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
             }
-
             return false;
         }
 
@@ -575,10 +630,13 @@ namespace MagicLeap.MRTK.Utilities
             }
 #endif // !MAGICLEAP_UNITY_SDK_2_2_0_OR_NEWER
 
+#if !MAGICLEAP_UNITY_SDK_2_4_0_OR_NEWER
             if (openXRProviderSelected && eyeTrackingOption == EyeTrackingOptions.UseEyeFixationPointDirectlyAsFocusPoint)
             {
-                Debug.LogError($"{GetType().Name}, the {eyeTrackingOption} option is not currently supported under OpenXR.");
+                Debug.LogError($"{GetType().Name}, the {eyeTrackingOption} option is not currently supported under OpenXR with this version of the Magic Leap SDK. " +
+                   "Please update to version 2.4.0, or later, of the Magic Leap SDK to resolve the issue.");
             }
+#endif
 
 #elif UNITY_OPENXR_1_7_0_OR_NEWER && MAGICLEAP_UNITY_SDK_1_9_0_OR_NEWER
             Debug.LogError($"{GetType().Name} will not work correctly with this combination of the Magic Leap SDK package version " +

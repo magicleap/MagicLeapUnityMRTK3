@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0
+### Features
+ 
+- Added the `MagicLeapInputSimulator` prefab to provide Magic Leap input simulation (e.g. Controller) when playing in the Unity Editor.
+  - To use the Magic Leap input simulator, either enable the settings option to automatically add it in Editor play mode, in **Edit** > **Project Settings** > **MRTK3** > **Magic Leap Settings**,
+    or manually place the prefab in the scene. The prefab is located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Simulation<wbr>/<wbr>Prefabs/.
+- Updated the StereoConvergenceDetector to use the new MagicLeapEyeTrackerFeature when using OpenXR and Magic Leap Unity SDK 2.4.0 or greater.
+
+### Bugfixes
+
+- Fixed some minor issues in the provided samples.
+
 ## 1.2.0
 ### Features
  

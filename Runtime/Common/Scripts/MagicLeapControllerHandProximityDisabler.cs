@@ -1,7 +1,7 @@
 // %BANNER_BEGIN%
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
-// Copyright (c) (2018-2022) Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) (2022-2024) Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Software License Agreement, located here: https://www.magicleap.com/software-license-agreement-ml2
 // Terms and conditions applicable to third-party materials accompanying this distribution may also be found in the top-level NOTICE file appearing herein.
 // %COPYRIGHT_END%
@@ -63,6 +63,16 @@ namespace MagicLeap.MRTK
             set => handSwitchTimeThreshold = value;
         }
 
+        [SerializeField]
+        [Tooltip("Whether to ignore controller and hand proximity in Editor play mode.")]
+        private bool ignoreProximityInEditorPlayMode = true;
+
+        /// <summary>
+        /// Whether to ignore controller and hand proximity in Editor play mode.
+        /// </summary>
+        public bool IgnoreProximityInEditorPlayMode => ignoreProximityInEditorPlayMode;
+
+
         private Dictionary<XRNode, GameObject> handControllers;
         private GameObject currentClosestHandController = null;
         private GameObject targetClosestHandController = null;
@@ -78,7 +88,15 @@ namespace MagicLeap.MRTK
 
         private void Awake()
         {
-            handControllerMultimodalType = MagicLeapAuxiliaryHandUtils.GetHandControllerMultimodalTypeSettingWithDefault();
+            if (Application.isEditor && ignoreProximityInEditorPlayMode)
+            {
+                handControllerMultimodalType = HandControllerMultimodalTypeOption.HandsAndControllerAlwaysActive;
+            }
+            else
+            {
+                handControllerMultimodalType = MagicLeapAuxiliaryHandUtils.GetHandControllerMultimodalTypeSettingWithDefault();
+            }
+
             if (handControllerMultimodalType == HandControllerMultimodalTypeOption.HandsAndControllerAlwaysActive)
             {
                 // Disable the script, hands and controller always active
