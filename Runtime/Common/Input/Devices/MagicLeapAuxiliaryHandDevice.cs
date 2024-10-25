@@ -116,8 +116,7 @@ namespace MagicLeap.MRTK.Input
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void CreateRuntimeInstances()
         {
-            // Only provide runtime ML auxiliary device if either the Magic Leap or OpenXR XRLoaders are active
-            if (!(MLDevice.IsMagicLeapLoaderActive() || MLDevice.IsOpenXRLoaderActive()))
+            if (!MagicLeapMRTK3Settings.RuntimeIsCompatible())
             {
                 return;
             }

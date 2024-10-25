@@ -96,6 +96,11 @@ namespace MagicLeap.MRTK.Input
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Register()
         {
+            if (!MagicLeapMRTK3Settings.DeviceIsCompatible())
+            {
+                return;
+            }
+
             var instance = new MagicLeapAuxiliaryXRProviderHandUtility_MLProvider();
             MagicLeapAuxiliaryHandUtils.RegisterXRProviderHandUtility(instance);
 

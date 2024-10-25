@@ -1,9 +1,18 @@
 {
     "name": "com.magicleap.mrtk3",
     "displayName": "Magic Leap MRTK3",
-    "version": "1.0.0-pre.7",
+    "version": "1.0.0-pre.7.1",
     "unity": "2022.2",
-    "description": "Magic Leap MRTK3 Package",
+    "description": "This package enables and provides utilities for MRTK3 development on the Magic Leap 2.",
+    "keywords": [
+      "magicleap",
+      "ar",
+      "augmented",
+      "xr",
+      "reality",
+      "mrtk",
+      "mrtk3"
+    ],
     "dependencies": {
       "com.magicleap.unitysdk": "1.8.0",
       "org.mixedrealitytoolkit.core": "3.0.0",

@@ -21,6 +21,11 @@ namespace MagicLeap.MRTK.Settings
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static void OnBeforeSceneLoad()
         {
+            if (!MagicLeapMRTK3Settings.RuntimeIsCompatible())
+            {
+                return;
+            }
+
             foreach (var settingsObject in MagicLeapMRTK3Settings.Instance.SettingsObjects)
             {
                 if (settingsObject.CompatibleWithActiveXRLoader)
@@ -33,6 +38,11 @@ namespace MagicLeap.MRTK.Settings
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void OnAfterSceneLoad()
         {
+            if (!MagicLeapMRTK3Settings.RuntimeIsCompatible())
+            {
+                return;
+            }
+
             foreach (var settingsObject in MagicLeapMRTK3Settings.Instance.SettingsObjects)
             {
                 if (settingsObject.CompatibleWithActiveXRLoader)

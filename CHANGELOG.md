@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0-pre.7.1
+### Bugfixes
+
+- Fixed an issue where the Magic Leap MRTK3 settings and systems were unintentionally running on platforms other than ML2 when using the OpenXR XR Provider.
+
+### Known Issues / Limitations
+
+- The provided **Spatial Awareness Examples** sample, demonstrating mesh reconstruction, currently only works with the Magic Leap XR Provider.  OpenXR support will be added to the sample in a later release.
+- Other MagicLeap 2 apis that overlap with MRTK3 are not yet configured or hooked up.
+
 ## 1.0.0-pre.7
 ### Features
 

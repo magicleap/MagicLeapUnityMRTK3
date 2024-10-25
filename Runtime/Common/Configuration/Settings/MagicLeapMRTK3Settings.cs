@@ -12,6 +12,12 @@ using System;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.XR.MagicLeap;
+
+#if UNITY_OPENXR_1_9_0_OR_NEWER
+using UnityEngine.XR.OpenXR;
+using UnityEngine.XR.OpenXR.Features.MagicLeapSupport;
+#endif
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -51,6 +57,23 @@ namespace MagicLeap.MRTK.Settings
 
         [SerializeField]
         private MagicLeapMRTK3SettingsPermissionsConfig permissionsConfig = null;
+
+        private static Lazy<bool> DeviceNameContainsMagicLeap = new(() =>
+        {
+            const string MagicLeap = "Magic Leap";
+            return SystemInfo.deviceName.Contains(MagicLeap);
+        });
+
+        private static Lazy<bool> MagicLeapOpenXRFeatureEnabled = new(() =>
+        {
+#if UNITY_OPENXR_1_9_0_OR_NEWER
+            MagicLeapFeature mlOpenXRFeature = OpenXRSettings.Instance.GetFeature<MagicLeapFeature>();
+            return mlOpenXRFeature != null ? mlOpenXRFeature.enabled : false;
+#else
+            return false;
+#endif
+        });
+
 
         /// <summary>
         /// Provides enumerable access to all contained <see cref="MagicLeapMRTK3SettingsObject"/>s.
@@ -108,6 +131,48 @@ namespace MagicLeap.MRTK.Settings
             return false;
         }
 
+        /// <summary>
+        /// Determines if the current device is compatible with Magic Leap 2 settings and systems,
+        /// not counting active runtime XR Providers.
+        /// </summary>
+        /// <remarks>
+        /// This method is useful for early checks before runtime subsystems have been started.
+        /// </remarks>
+        internal static bool DeviceIsCompatible()
+        {
+            if (Application.isEditor)
+            {
+                return true;
+            }
+            else
+            {
+                return DeviceNameContainsMagicLeap.Value;
+            }
+        }
+
+        /// <summary>
+        /// Determines if the current runtime is compatible with Magic Leap 2 settings and systems,
+        /// including device and active runtime XR Providers.
+        /// </summary>
+        /// <remarks>
+        /// This method is only valid after runtime subsystems have been started.
+        /// </remarks>
+        internal static bool RuntimeIsCompatible()
+        {
+            if (!DeviceIsCompatible() || !MLDevice.IsMagicLeapOrOpenXRLoaderActive())
+            {
+                return false;
+            }
+
+            // Under OpenXR, ensure the MagicLeapFeature is present and enabled.
+            if (MLDevice.IsOpenXRLoaderActive() && !MagicLeapOpenXRFeatureEnabled.Value)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         private void OnEnable()
         {
             // Deserialization has occurred at this point, so validate settings objects.
@@ -123,6 +188,7 @@ namespace MagicLeap.MRTK.Settings
 
 #if UNITY_EDITOR
             serializedObject = new SerializedObject(this);
+            SelectedXRProvider = default;
 #endif
         }
 
@@ -167,8 +233,6 @@ namespace MagicLeap.MRTK.Settings
             ValidateSettingsObjectInEditor(ref openXRRigConfig);
 #endif
             ValidateSettingsObjectInEditor(ref permissionsConfig);
-
-            SelectedXRProvider = default;
         }
 
         private void ValidateSettingsObjectInEditor<T>(ref T settingsObject) where T : MagicLeapMRTK3SettingsObject

@@ -21,6 +21,7 @@ using System.Threading;
 using Unity.XR.CoreUtils;
 using MixedReality.Toolkit;
 using System.Collections.Generic;
+using MagicLeap.MRTK.Settings;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -68,8 +69,8 @@ namespace MagicLeap.MRTK.Input
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         public static void CreateRuntimeInstances()
         {
-            // Only provide runtime ML auxiliary device if the Magic Leap XRLoader is active
-            if (!MLDevice.IsMagicLeapLoaderActive())
+            // Special case, the auxiliary eye device only runs when the ML XR Provider is active (not also OpenXR).
+            if (!MagicLeapMRTK3Settings.DeviceIsCompatible() || !MLDevice.IsMagicLeapLoaderActive())
             {
                 return;
             }

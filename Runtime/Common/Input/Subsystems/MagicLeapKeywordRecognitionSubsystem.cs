@@ -18,6 +18,7 @@ using UnityEngine.Events;
 using System.Collections.Concurrent;
 using System.Threading;
 using UnityEditor;
+using MagicLeap.MRTK.Settings;
 
 namespace MagicLeap.MRTK.Input
 {
@@ -34,6 +35,11 @@ namespace MagicLeap.MRTK.Input
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void Register()
         {
+            if (!MagicLeapMRTK3Settings.DeviceIsCompatible())
+            {
+                return;
+            }
+
             // Fetch subsystem metadata from the attribute.
             var cinfo = XRSubsystemHelpers.ConstructCinfo<MagicLeapKeywordRecognitionSubsystem, KeywordRecognitionSubsystemCinfo>();
 
