@@ -1,5 +1,5 @@
 {
-    "name": "MagicLeapInput",
+    "name": "MagicLeapInputsOpenXR",
     "maps": [
         {
             "name": "HMD",

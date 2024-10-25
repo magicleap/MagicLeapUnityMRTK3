@@ -8,7 +8,9 @@
 // ---------------------------------------------------------------------
 // %BANNER_END%
 
+using MixedReality.Toolkit;
 using MixedReality.Toolkit.Input;
+using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.XR;
@@ -83,6 +85,13 @@ namespace MagicLeap.MRTK.Samples.SpatialAwareness
                         }
                     }
                 }
+            }
+
+            // Set XROrigin tracking origin mode to device
+            XROrigin xrOrigin = PlayspaceUtilities.XROrigin;
+            if (xrOrigin != null)
+            {
+                xrOrigin.RequestedTrackingOriginMode = XROrigin.TrackingOriginMode.Device;
             }
         }
     }

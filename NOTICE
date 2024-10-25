@@ -99,13 +99,13 @@ BEGIN MIT / BSD AND VARIANT LICENSED THIRD PARTY CODE
 -------------------------------------------------------------------------------------------------------------------
 ////Begin:Magic Leap, Inc. adaptation from MRTK HandsUtils.cs of Microsoft MixedRealityToolkit-Unity  --------------------
 
-This file [Runtime\MagicLeap\Input\Subsystems\MagicLeapHandsUtils.cs] is derived, at least in part, from the file HandsUtils.cs of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
+The file [MagicLeapHandsUtils.cs] in this distribution is derived, at least in part, from the file HandsUtils.cs of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/9941264a4a9c2a7252908a41b9dcdfa422438196/com.microsoft.mrtk.core/Utilities/HandsUtils.cs
 
-under the terms of the MIT license and modified extensively by Magic Leap, Inc.  
+under the terms of the MIT license and modified by Magic Leap, Inc.  
 
-The file, as it appears in this distribution, is here provided to you under the terms of the LICENSE file appearing in the top-level directory of this distribution.  Upstream notices documentation is provided below for your reference.
+The file, as it appears in this distribution, is here provided to you under the terms of this distribution as indicated in the LICENSE file accompanying this distribution.  Upstream notices documentation is provided below for your reference.
 
 https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/9941264a4a9c2a7252908a41b9dcdfa422438196/LICENSE.md acquired 04/04/2023 recites:
 
@@ -137,13 +137,13 @@ SOFTWARE.
 
 ////Begin:Magic Leap, Inc. adaptation from MRTK XRSDKHandsSubsystem.cs of Microsoft MixedRealityToolkit-Unity --------------------
 
-This file [Runtime\MagicLeap\Input\Subsystems\MagicLeapXRSDKHandsSubsystem.cs] is derived, at least in part, from the file XRSDKHandsSubsystem.cs of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
+The file [MagicLeapXRSDKHandsSubsystem.cs] in this distribution is derived, at least in part, from the file XRSDKHandsSubsystem.cs of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/9941264a4a9c2a7252908a41b9dcdfa422438196/com.microsoft.mrtk.input/Subsystems/Hands/XRSDKHandsSubsystem.cs
 
 under the terms of the MIT license and modified extensively by Magic Leap, Inc.  
 
-The file, as it appears in this distribution, is here provided to you under the terms of the LICENSE file appearing in the top-level directory of this distribution.  Upstream notices documentation is provided below for your reference.
+The file, as it appears in this distribution, is here provided to you under the terms of this distribution as indicated in the LICENSE file accompanying this distribution.  Upstream notices documentation is provided below for your reference.
 
 https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/9941264a4a9c2a7252908a41b9dcdfa422438196/LICENSE.md acquired 04/04/2023 recites:
 
@@ -175,13 +175,13 @@ SOFTWARE.
 
 ////Begin:Magic Leap, Inc. adaptation from MRTKProfile.asset of Microsoft MixedRealityToolkit-Unity --------------------
 
-This file [Runtime/XRProviders/MagicLeap/Configuration/Default Profiles/MRTKProfile-MagicLeap.asset] is derived, at least in part, from the file MRTKProfile.asset of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
+The file [MRTKProfile-MagicLeap.asset] in this distribution is derived, at least in part, from the file MRTKProfile.asset of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/9941264a4a9c2a7252908a41b9dcdfa422438196/com.microsoft.mrtk.core/Configuration/Default%20Profiles/MRTKProfile.asset
 
 under the terms of the MIT license and modified by Magic Leap, Inc.  
 
-The file, as it appears in this distribution, is here provided to you under the terms of the LICENSE file appearing in the top-level directory of this distribution.  Upstream notices documentation is provided below for your reference.
+The file, as it appears in this distribution, is here provided to you under the terms of this distribution as indicated in the LICENSE file accompanying this distribution.  Upstream notices documentation is provided below for your reference.
 
 https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/9941264a4a9c2a7252908a41b9dcdfa422438196/LICENSE.md acquired 04/04/2023 recites:
 
@@ -213,13 +213,13 @@ SOFTWARE.
 
 ////Begin:Magic Leap, Inc. adaptation from HandInteractionExamples.unity of Microsoft MixedRealityToolkit-Unity --------------------
 
-This file [Samples~\HandAndControllerInteractionExamples\Scenes\HandAndControllerInteractionExamples.unity ] is derived, at least in part, from the file HandInteractionExamples.unity of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
+The file [HandAndControllerInteractionExamples.unity] in this distribution is derived, at least in part, from the file HandInteractionExamples.unity of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/9941264a4a9c2a7252908a41b9dcdfa422438196/UnityProjects/MRTKDevTemplate/Assets/Scenes/HandInteractionExamples.unity
 
 under the terms of the MIT license and modified by Magic Leap, Inc.  
 
-The file, as it appears in this distribution, is here provided to you under the terms of the LICENSE file appearing in the top-level directory of this distribution.  Upstream notices documentation is provided below for your reference.
+The file, as it appears in this distribution, is here provided to you under the terms of this distribution as indicated in the LICENSE file accompanying this distribution.  Upstream notices documentation is provided below for your reference.
 
 https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/9941264a4a9c2a7252908a41b9dcdfa422438196/LICENSE.md acquired 04/04/2023 recites:
 
@@ -251,13 +251,13 @@ SOFTWARE.
 
 ////Begin:Magic Leap, Inc. adaptation from MRTK MagicLeap Controller.prefab of Microsoft MixedRealityToolkit-Unity --------------------
 
-This file [Runtime/XRProviders/MagicLeap/Prefabs/MRTK_Variants/MRTK MagicLeap Controller.prefab] is derived, at least in part, from the file MRTK LeftHand Controller.prefab of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
+The file [MRTK MagicLeap Controller.prefab] in this distribution is derived, at least in part, from the file MRTK LeftHand Controller.prefab of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/9941264a4a9c2a7252908a41b9dcdfa422438196/com.microsoft.mrtk.input/Assets/Prefabs/MRTK%20LeftHand%20Controller.prefab
 
 under the terms of the MIT license and modified by Magic Leap, Inc.  
 
-The file, as it appears in this distribution, is here provided to you under the terms of the LICENSE file appearing in the top-level directory of this distribution.  Upstream notices documentation is provided below for your reference.
+The file, as it appears in this distribution, is here provided to you under the terms of this distribution as indicated in the LICENSE file accompanying this distribution.  Upstream notices documentation is provided below for your reference.
 
 https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/9941264a4a9c2a7252908a41b9dcdfa422438196/LICENSE.md acquired 04/04/2023 recites:
 
@@ -289,13 +289,13 @@ SOFTWARE.
 
 ////Begin:Magic Leap, Inc. adaptation from MRTK XR Rig.prefab of Microsoft MixedRealityToolkit-Unity --------------------
 
-This file [Runtime/XRProviders/MagicLeap/Prefabs/MRTK_Variants/MRTK XR Rig - MagicLeap.prefab] is derived, at least in part, from the file MRTK XR Rig.prefab of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
+The file [MRTK XR Rig - MagicLeap.prefab] in this distribution is derived, at least in part, from the file MRTK XR Rig.prefab of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/9941264a4a9c2a7252908a41b9dcdfa422438196/com.microsoft.mrtk.input/Assets/Prefabs/MRTK%20XR%20Rig.prefab
 
 under the terms of the MIT license and modified by Magic Leap, Inc.  
 
-The file, as it appears in this distribution, is here provided to you under the terms of the LICENSE file appearing in the top-level directory of this distribution.  Upstream notices documentation is provided below for your reference.
+The file, as it appears in this distribution, is here provided to you under the terms of this distribution as indicated in the LICENSE file accompanying this distribution.  Upstream notices documentation is provided below for your reference.
 
 https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/9941264a4a9c2a7252908a41b9dcdfa422438196/LICENSE.md acquired 04/04/2023 recites:
 
@@ -327,13 +327,13 @@ SOFTWARE.
 
 ////Begin:Magic Leap, Inc. adaptation from openxr_left_hand.prefab of Microsoft MixedRealityToolkit-Unity --------------------
 
-This file [Runtime/XRProviders/MagicLeap/Prefabs/MRTK_Variants/Hand Visuals/openxr_left_hand - MagicLeap.prefab] is derived, at least in part, from the file openxr_left_hand.prefab of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
+The file [openxr_left_hand.prefab] in this distribution is derived, at least in part, from the file openxr_left_hand.prefab of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/9941264a4a9c2a7252908a41b9dcdfa422438196/com.microsoft.mrtk.input/Visualizers/RiggedHandVisualizer/openxr_left_hand.prefab
 
 under the terms of the MIT license and modified by Magic Leap, Inc.  
 
-The file, as it appears in this distribution, is here provided to you under the terms of the LICENSE file appearing in the top-level directory of this distribution.  Upstream notices documentation is provided below for your reference.
+The file, as it appears in this distribution, is here provided to you under the terms of this distribution as indicated in the LICENSE file accompanying this distribution.  Upstream notices documentation is provided below for your reference.
 
 https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/9941264a4a9c2a7252908a41b9dcdfa422438196/LICENSE.md acquired 04/04/2023 recites:
 
@@ -365,13 +365,13 @@ SOFTWARE.
 
 ////Begin:Magic Leap, Inc. adaptation from openxr_right_hand.prefab of Microsoft MixedRealityToolkit-Unity --------------------
 
-This file [Runtime/XRProviders/MagicLeap/Prefabs/MRTK_Variants/Hand Visuals/openxr_right_hand - MagicLeap.prefab] is derived, at least in part, from the file openxr_right_hand.prefab of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
+The file [openxr_right_hand.prefab] in this distribution is derived, at least in part, from the file openxr_right_hand.prefab of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/9941264a4a9c2a7252908a41b9dcdfa422438196/com.microsoft.mrtk.input/Visualizers/RiggedHandVisualizer/openxr_right_hand.prefab
 
 under the terms of the MIT license and modified by Magic Leap, Inc.  
 
-The file, as it appears in this distribution, is here provided to you under the terms of the LICENSE file appearing in the top-level directory of this distribution.  Upstream notices documentation is provided below for your reference.
+The file, as it appears in this distribution, is here provided to you under the terms of this distribution as indicated in the LICENSE file accompanying this distribution.  Upstream notices documentation is provided below for your reference.
 
 https://raw.githubusercontent.com/microsoft/MixedRealityToolkit-Unity/9941264a4a9c2a7252908a41b9dcdfa422438196/LICENSE.md acquired 04/04/2023 recites:
 
@@ -403,13 +403,13 @@ SOFTWARE.
 
 ////Begin:Magic Leap, Inc. adaptation from RiggedHandMeshVisualizer.cs of Microsoft MixedRealityToolkit-Unity --------------------
 
-This file [Runtime\MagicLeap\Scripts\MagicLeapRiggedHandMeshVisualizer.cs] is derived, at least in part, from the file RiggedHandMeshVisualizer.cs of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
+The file [MagicLeapRiggedHandMeshVisualizer.cs] in this distribution is derived, at least in part, from the file RiggedHandMeshVisualizer.cs of MRTK, Copyright (c) Microsoft Corporation, as acquired from 
 
 https://github.com/microsoft/MixedRealityToolkit-Unity/blob/29a5fa536d2f31f471e63db73b0cc58657df10d1/com.microsoft.mrtk.input/Visualizers/RiggedHandVisualizer/RiggedHandMeshVisualizer.cs
 
 under the terms of the MIT license and modified by Magic Leap, Inc.  
 
-The file, as it appears in this distribution, is here provided to you under the terms of the LICENSE file appearing in the top-level directory of this distribution.  Upstream notices documentation is provided below for your reference.
+The file, as it appears in this distribution, is here provided to you under the terms of this distribution as indicated in the LICENSE file accompanying this distribution.  Upstream notices documentation is provided below for your reference.
 
 Acquired 09/08/2023 from https://github.com/microsoft/MixedRealityToolkit-Unity/archive/29a5fa536d2f31f471e63db73b0cc58657df10d1.zip and reduced to only the path leading to RiggedHandMeshVisualizer.cs
 
@@ -531,7 +531,7 @@ BEGIN REFERENCE LICENSE LISTINGS
 -------------------------------------------------------------------------------------------------------------------
 ////Begin: CC-BY LICENSE INFORMATION ----------------------
 
-Information regarding the CC-BY 3.0 and CC-BY 4.0 licenses may be fonud at https://creativecommons.org/licenses/by/3.0/legalcode and https://creativecommons.org/licenses/by/4.0/legalcode repsectively as of 12/06/2019.
+Information regarding the various CC-BY licenses may be found at https://creativecommons.org/share-your-work/cclicenses/ as of November 09, 2023.
 
 //////End: CC-BY LICENSE INFORMATION ----------------------
 
@@ -3490,4 +3490,21 @@ EXCEPT AS EXPRESSLY SET FORTH IN THIS AGREEMENT, NEITHER RECIPIENT NOR ANY CONTR
 
 If any provision of this Agreement is invalid or unenforceable under applicable law, it shall not affect the validity or enforceability of the remainder of the terms of this Agreement, and without further action by the parties hereto, such provision shall be reformed to the minimum extent necessary to make such provision valid and enforceable.
 
-If Recipient institutes patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Program itself (excluding combinati
+If Recipient institutes patent litigation against any entity (including a cross-claim or counterclaim in a lawsuit) alleging that the Program itself (excluding combinations of the Program with other software or hardware) infringes such Recipient's patent(s), then such Recipient's rights granted under Section 2(b) shall terminate as of the date such litigation is filed.
+
+All Recipient's rights under this Agreement shall terminate if it fails to comply with any of the material terms or conditions of this Agreement and does not cure such failure in a reasonable period of time after becoming aware of such noncompliance. If all Recipient's rights under this Agreement terminate, Recipient agrees to cease use and distribution of the Program as soon as reasonably practicable. However, Recipient's obligations under this Agreement and any licenses granted by Recipient relating to the Program shall continue and survive.
+
+Everyone is permitted to copy and distribute copies of this Agreement, but in order to avoid inconsistency the Agreement is copyrighted and may only be modified in the following manner. The Agreement Steward reserves the right to publish new versions (including revisions) of this Agreement from time to time. No one other than the Agreement Steward has the right to modify this Agreement. The Eclipse Foundation is the initial Agreement Steward. The Eclipse Foundation may assign the responsibility to serve as the Agreement Steward to a suitable separate entity. Each new version of the Agreement will be given a distinguishing version number. The Program (including Contributions) may always be distributed subject to the version of the Agreement under which it was received. In addition, after a new version of the Agreement is published, Contributor may elect to distribute the Program (including its Contributions) under the new version. Except as expressly stated in Sections 2(a) and 2(b) above, Recipient receives no rights or licenses to the intellectual property of any Contributor under this Agreement, whether expressly, by implication, estoppel or otherwise. All rights in the Program not expressly granted under this Agreement are reserved.
+
+This Agreement is governed by the laws of the State of New York and the intellectual property laws of the United States of America. No party to this Agreement will bring a legal action under this Agreement more than one year after the cause of action arose. Each party waives its rights to a jury trial in any resulting litigation.
+//////End: Eclipse Public License version 1.0  ----------------------
+
+
+-------------------------------------------------------------------------------------------------------------------
+END REFERENCE LICENSE LISTINGS
+-------------------------------------------------------------------------------------------------------------------
+
+
+
+END MRTK3 ML EXTENSION HUB GH NPM NOTICES
+#####################################################################################

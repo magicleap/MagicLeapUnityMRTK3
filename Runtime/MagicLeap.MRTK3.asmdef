@@ -61,6 +61,11 @@
             "name": "com.magicleap.unitysdk",
             "expression": "2.2.0-pre.1",
             "define": "MAGICLEAP_UNITY_SDK_2_2_0_OR_NEWER"
+        },
+        {
+            "name": "com.magicleap.unitysdk",
+            "expression": "2.3.0-pre.1",
+            "define": "MAGICLEAP_UNITY_SDK_2_3_0_OR_NEWER"
         }
     ],
     "noEngineReferences": false

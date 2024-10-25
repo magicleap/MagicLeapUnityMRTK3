@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.1.0
+### Features
+ 
+- Added an option to the Runtime Rig Configuration for OpenXR to override the XROrigin's requested tracking origin mode.  The current recommended tracking origin mode for the ML2 is `Device` mode.
+- Updated the OpenXR rig variant to request `Device` tracking mode.
+- Made an improvement to the responsiveness of the hand and controller multimodal behavior, MagicLeapControllerHandProximityDisabler, for when the controller tracking state changes and when detecting a hand is holding the controller.
+- Exposed the time threshold property of the MagicLeapControllerHandProximityDisabler component for having a consistent target before a hand switch is made.
+
+### Misc.
+
+- Updated LICENSE and NOTICE
+
 ## 1.0.0
 ### Features
 

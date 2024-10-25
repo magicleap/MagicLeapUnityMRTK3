@@ -78,6 +78,22 @@ namespace MagicLeap.MRTK.Settings
 
         private HashSet<int> configuredRigIDs = new HashSet<int>();
 
+        [SerializeField]
+        [Tooltip("Whether overriding the XROrigin's Tracking Origin Mode is enabled overall.")]
+        private bool overrideTrackingOriginMode = false;
+        public bool OverrideTrackingOriginMode => overrideTrackingOriginMode;
+
+        [SerializeField]
+        [Tooltip("The Tracking Origin Mode.")]
+        private XROrigin.TrackingOriginMode trackingOriginMode = XROrigin.TrackingOriginMode.Device;
+        public XROrigin.TrackingOriginMode TrackingOriginMode => trackingOriginMode;
+
+        [SerializeField]
+        [Tooltip("Whether to disable the UnboundedTrackingMode component. This is recommended, as otherwise it can interfere " +
+                 "with overriding the XROrigin's tracking mode with the setting above.")]
+        private bool disableUnboundedTrackingMode = true;
+        public bool DisableUnboundedTrackingMode => disableUnboundedTrackingMode;
+
 #if UNITY_EDITOR
 
         /// <inheritdoc/>
@@ -118,6 +134,31 @@ namespace MagicLeap.MRTK.Settings
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("rightHandModelPrefab"),
                     new GUIContent("Right Hand Model Prefab"));
             }
+
+#if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
+            // Override Rig's XROrigin.RequestedTrackingOriginMode
+            {
+                // Only relevant for OpenXR. "Device" is the only supported TrackingOriginMode on ML plugin.
+                if (MagicLeapMRTK3Settings.Instance.SelectedXRProvider == MagicLeapMRTK3Settings.XRProviderOption.OpenXR)
+                {
+                    EditorGUILayout.Space(8);
+                    const string overrideTrackingOriginModeLabel = "Override the XROrigin's Requested Tracking Origin Mode";
+                    EditorGUILayout.LabelField(overrideTrackingOriginModeLabel);
+                    float overrideTrackingOriginModeLabelWidth = EditorStyles.label.CalcSize(new GUIContent(overrideTrackingOriginModeLabel)).x;
+                    DrawGUILineSeparator(2, overrideTrackingOriginModeLabelWidth);
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("overrideTrackingOriginMode"), new GUIContent("Enabled"));
+                    EditorGUI.indentLevel++;
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("trackingOriginMode"));
+                    float originalLabelWidth = EditorGUIUtility.labelWidth;
+                    const string diableUnboundedTrackingModeLabel = "Disable UnboundedTrackingMode";
+                    EditorGUIUtility.labelWidth = EditorStyles.label.CalcSize(new GUIContent(diableUnboundedTrackingModeLabel)).x + 20.0f;
+                    EditorGUILayout.PropertyField(serializedObject.FindProperty("disableUnboundedTrackingMode"),
+                                                  new GUIContent(diableUnboundedTrackingModeLabel));
+                    EditorGUIUtility.labelWidth = originalLabelWidth;
+                    EditorGUI.indentLevel--;
+                }
+            }
+#endif
 
             // MRTK InputAction path overrides
             {
@@ -260,6 +301,20 @@ namespace MagicLeap.MRTK.Settings
                 {
                     Debug.LogWarning("Attempting to add InputActionAssets to the MRTK XR Rig, " +
                                      "but unable to locate the InputActionManager within the rig.");
+                }
+
+                // Override the TrackingOriginMode
+                if (OverrideTrackingOriginMode)
+                {
+                    if (DisableUnboundedTrackingMode)
+                    {
+                        UnboundedTrackingMode unboundedComponent = mrtkRig.GetComponentInChildren<UnboundedTrackingMode>();
+                        if (unboundedComponent != null)
+                        {
+                            unboundedComponent.enabled = false;
+                        }
+                    }
+                    xrOrigin.RequestedTrackingOriginMode = TrackingOriginMode;
                 }
             }
         }

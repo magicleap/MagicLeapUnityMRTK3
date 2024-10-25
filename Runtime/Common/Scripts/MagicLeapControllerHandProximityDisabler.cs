@@ -30,10 +30,13 @@ namespace MagicLeap.MRTK
     public class MagicLeapControllerHandProximityDisabler : MonoBehaviour
     {
         [SerializeField]
+        [Tooltip("The hand proximity threshold, in meters, under which an ArticulatedHandController is " +
+            "considered possibly holding the Controller.")]
         private float handProximityThreshold = .2f;
+
         /// <summary>
-        /// The hand proximity threshold under which an ArticulatedHandController is
-        /// considered possibly holding the Controller, in meters.
+        /// The hand proximity threshold, in meters, under which an ArticulatedHandController is
+        /// considered possibly holding the Controller.
         /// </summary>
         public float HandProximityThreshold
         {
@@ -41,11 +44,27 @@ namespace MagicLeap.MRTK
             set => handProximityThreshold = value;
         }
 
+        [SerializeField]
+        [Tooltip("The time threshold, in seconds, that the closest hand controller target must remain " +
+            "consistent before switching the current closest hand controller. This prevents quick " +
+            "successive changes.")]
+        private float handSwitchTimeThreshold = 0.25f;
+
+        /// <summary>
+        /// The time threshold, in seconds, that the closest hand controller target must remain
+        /// consistent before switching the current closest hand controller. This prevents quick 
+        /// successive changes.
+        /// </summary>
+        public float HandSwitchTimeThreshold 
+        {
+            get => handSwitchTimeThreshold;
+            set => handSwitchTimeThreshold = value;
+        }
+
         private ArticulatedHandController[] articulatedHandControllers;
         private ArticulatedHandController currentClosestHandController = null;
         private ArticulatedHandController targetClosestHandController = null;
         private float closestHandSwitchTimer = 0.0f;
-        private const float HandSwitchTimeThreshold = 0.25f;
         private ActionBasedController magicLeapController = null;
         private HandControllerMultimodalTypeOption handControllerMultimodalType = HandControllerMultimodalTypeOption.HandHoldingControllerFullyDisabled;
         private bool magicLeapControllerTracking = false;
@@ -90,6 +109,7 @@ namespace MagicLeap.MRTK
             }
 
             // Handle the controller to hand proximity calculation
+            bool controllerTrackingStateChanged = magicLeapControllerTracking != isControllerTracking;
             magicLeapControllerTracking = isControllerTracking;
             ArticulatedHandController newClosestHandController = null;
             if (magicLeapControllerTracking && HandSubsystem != null)
@@ -129,10 +149,15 @@ namespace MagicLeap.MRTK
                 closestHandSwitchTimer = 0.0f;
             }
 
-            // If the new closest hand controller target is a change and the time threshold is met,
-            // make the switch.
-            if (targetClosestHandController != currentClosestHandController &&
-                closestHandSwitchTimer > HandSwitchTimeThreshold)
+            // Switch the current closest hand if:
+            // The target has changed from current, and
+            // - The controller tracking state has changed this frame, or
+            // - Transitioning from no hand to a hand, or
+            // - The time threshold is met to switch hands or go to no hand
+            if (targetClosestHandController != currentClosestHandController && (
+                controllerTrackingStateChanged ||
+                currentClosestHandController == null ||
+                closestHandSwitchTimer >= HandSwitchTimeThreshold))
             {
                 SetClosestHandController(targetClosestHandController);
             }

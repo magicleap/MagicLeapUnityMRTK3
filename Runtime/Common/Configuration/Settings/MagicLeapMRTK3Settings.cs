@@ -18,7 +18,11 @@ using UnityEngine.XR.MagicLeap;
 
 #if UNITY_OPENXR_1_9_0_OR_NEWER && MAGICLEAP_UNITY_SDK_2_0_0_OR_NEWER
 using UnityEngine.XR.OpenXR;
+#if MAGICLEAP_UNITY_SDK_2_3_0_OR_NEWER
+using MagicLeap.OpenXR.Features;
+#else
 using UnityEngine.XR.OpenXR.Features.MagicLeapSupport;
+#endif
 #endif
 
 #if UNITY_EDITOR
