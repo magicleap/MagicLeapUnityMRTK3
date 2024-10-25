@@ -16,27 +16,29 @@ using MixedReality.Toolkit.Subsystems;
 using UnityEngine.XR;
 using MagicLeap.MRTK.Settings;
 using MagicLeap.MRTK.Input;
+using System.Collections.Generic;
+using UnityEngine.InputSystem.XR;
 
 namespace MagicLeap.MRTK
 {
     /// <summary>
-    /// Component to manage the enabled state of ArticulatedHandControllers that may
+    /// Component to manage the enabled state modality of hand controllers that may
     /// be holding the MagicLeap Controller.
-    /// The closest ArticulatedHandController, that is within the proximity
-    /// threshold, will be disabled.
-    /// Place this component on the ActionBasedController representing the MagicLeap Controller.
     /// </summary>
-    [RequireComponent(typeof(ActionBasedController))]
+    /// <remarks>
+    /// The closest hand, that is within the proximity threshold, will have its enabled state
+    /// and functionality managed based on the multi-modal option in settings.
+    /// </remarks>
     public class MagicLeapControllerHandProximityDisabler : MonoBehaviour
     {
         [SerializeField]
-        [Tooltip("The hand proximity threshold, in meters, under which an ArticulatedHandController is " +
-            "considered possibly holding the Controller.")]
+        [Tooltip("The hand proximity threshold, in meters, under which a hand controller is " +
+            "considered possibly holding the Magic Leap Controller.")]
         private float handProximityThreshold = .2f;
 
         /// <summary>
-        /// The hand proximity threshold, in meters, under which an ArticulatedHandController is
-        /// considered possibly holding the Controller.
+        /// The hand proximity threshold, in meters, under which a hand controller is
+        /// considered possibly holding the Magic Leap Controller.
         /// </summary>
         public float HandProximityThreshold
         {
@@ -61,11 +63,14 @@ namespace MagicLeap.MRTK
             set => handSwitchTimeThreshold = value;
         }
 
-        private ArticulatedHandController[] articulatedHandControllers;
-        private ArticulatedHandController currentClosestHandController = null;
-        private ArticulatedHandController targetClosestHandController = null;
+        private Dictionary<XRNode, GameObject> handControllers;
+        private GameObject currentClosestHandController = null;
+        private GameObject targetClosestHandController = null;
         private float closestHandSwitchTimer = 0.0f;
-        private ActionBasedController magicLeapController = null;
+#pragma warning disable CS0618 // ActionBasedController is obsolete
+        private ActionBasedController actionBasedController = null;
+#pragma warning restore CS0618 // ActionBasedController is obsolete
+        private TrackedPoseDriver trackedPoseDriver = null;
         private HandControllerMultimodalTypeOption handControllerMultimodalType = HandControllerMultimodalTypeOption.HandHoldingControllerFullyDisabled;
         private bool magicLeapControllerTracking = false;
 
@@ -80,8 +85,17 @@ namespace MagicLeap.MRTK
                 enabled = false;
             }
 
-            magicLeapController = GetComponent<ActionBasedController>();
-            articulatedHandControllers = FindObjectsOfType<ArticulatedHandController>();
+            // Attempt to obtain references to the top level tracking behaviors for the ML Controller hierarchy.
+            // The behavior used for tracking may vary depending on the version of this prefab being used.
+#pragma warning disable CS0618 // ActionBasedController is obsolete
+            actionBasedController = GetComponent<ActionBasedController>();
+#pragma warning restore CS0618 // ActionBasedController is obsolete
+            trackedPoseDriver = GetComponent<TrackedPoseDriver>();
+        }
+
+        private void Start()
+        {
+            MRTKRigUtils.TryFindHandControllers(out handControllers);
         }
 
         private void OnDisable()
@@ -89,39 +103,51 @@ namespace MagicLeap.MRTK
             SetClosestHandController(null);
         }
 
+        private bool GetControllerIsTracking()
+        {
+            if (actionBasedController != null)
+            {
+                return actionBasedController.currentControllerState.inputTrackingState.HasPositionAndRotation();
+            }
+            else if (trackedPoseDriver != null)
+            {
+                return ((InputTrackingState)(trackedPoseDriver.trackingStateInput.action?.ReadValue<int>() ?? default)).HasPositionAndRotation();
+            }
+
+            return false;
+        }
+
         void Update()
         {
-            bool isControllerTracking = magicLeapController.currentControllerState.inputTrackingState.HasPositionAndRotation();
+            // Update controller tracking state changes
+            bool isControllerTracking = GetControllerIsTracking();
+            bool controllerTrackingStateChanged = magicLeapControllerTracking != isControllerTracking;
+            magicLeapControllerTracking = isControllerTracking;
 
-            // Handle the developer setting which disables both hands, while the controller is tracking
-            if (handControllerMultimodalType == HandControllerMultimodalTypeOption.HandsDisabledWhileControllerActive)
+            // Handle the developer setting which disables both hands when the controller is tracking, and the state has changed.
+            if (controllerTrackingStateChanged &&
+                handControllerMultimodalType == HandControllerMultimodalTypeOption.HandsDisabledWhileControllerActive)
             {
-                if(magicLeapControllerTracking != isControllerTracking)
+                // Note: The InputTrackingState is not immediately set to None, when the controller is set down
+                foreach (var (_, controller) in handControllers)
                 {
-                    // Note: The InputTrackingState is not immediately set to None, when the controller is set down
-                    foreach (ArticulatedHandController controller in articulatedHandControllers)
-                    {
-                        ActivateHand(controller, !isControllerTracking);
-                    }
-                    magicLeapControllerTracking = isControllerTracking;
+                    ActivateHand(controller, !magicLeapControllerTracking);
                 }
                 return;
             }
 
             // Handle the controller to hand proximity calculation
-            bool controllerTrackingStateChanged = magicLeapControllerTracking != isControllerTracking;
-            magicLeapControllerTracking = isControllerTracking;
-            ArticulatedHandController newClosestHandController = null;
+            GameObject newClosestHandController = null;
             if (magicLeapControllerTracking && HandSubsystem != null)
             {
                 float closestDistance = float.MaxValue;
                 Vector3 mlControllerPosition = transform.position;
 
-                foreach (ArticulatedHandController controller in articulatedHandControllers)
+                foreach (var (handNode, controller) in handControllers)
                 {
                     // Note: Using palm joint position for hand position
                     if (HandSubsystem.TryGetJoint(TrackedHandJoint.Palm,
-                                                  controller.HandNode,
+                                                  handNode,
                                                   out HandJointPose pose))
                     {
                         Vector3 handPosition = pose.Position;
@@ -163,7 +189,7 @@ namespace MagicLeap.MRTK
             }
         }
 
-        private void SetClosestHandController(ArticulatedHandController newClosestHandController)
+        private void SetClosestHandController(GameObject newClosestHandController)
         {
             bool handRayDisabled = handControllerMultimodalType == HandControllerMultimodalTypeOption.HandHoldingControllerRayDisabled;
             bool handFullyDisabled = handControllerMultimodalType == HandControllerMultimodalTypeOption.HandHoldingControllerFullyDisabled;
@@ -201,7 +227,7 @@ namespace MagicLeap.MRTK
             }
         }
 
-        private void ActivateHandRay(ArticulatedHandController handController, bool active)
+        private void ActivateHandRay(GameObject handController, bool active)
         {
             if (handController != null)
             {
@@ -215,11 +241,11 @@ namespace MagicLeap.MRTK
             }
         }
 
-        private void ActivateHand(ArticulatedHandController handController, bool active)
+        private void ActivateHand(GameObject handController, bool active)
         {
             if (handController != null)
             {
-                handController.gameObject.SetActive(active);
+                handController.SetActive(active);
             }
         }
     }

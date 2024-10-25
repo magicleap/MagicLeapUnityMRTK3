@@ -68,7 +68,7 @@ namespace MagicLeap.MRTK.Settings
         private static Lazy<bool> DeviceNameContainsMagicLeap = new(() =>
         {
             const string MagicLeap = "Magic Leap";
-            return SystemInfo.deviceName.Contains(MagicLeap);
+            return SystemInfo.deviceName.Contains(MagicLeap) || SystemInfo.deviceModel.Contains(MagicLeap);
         });
 
         private static Lazy<bool> MagicLeapOpenXRFeatureEnabled = new(() =>

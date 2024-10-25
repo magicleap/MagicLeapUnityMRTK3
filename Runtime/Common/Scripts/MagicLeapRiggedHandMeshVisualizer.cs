@@ -9,7 +9,11 @@
 // top-level directory of this distribution.
 
 using MixedReality.Toolkit;
+using MixedReality.Toolkit.Input;
 using MixedReality.Toolkit.Subsystems;
+#if MRTK_INPUT_4_0_0_OR_NEWER
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Readers;
+#endif
 // END ML CHANGE
 using System.Collections;
 using System.Collections.Generic;
@@ -34,8 +38,12 @@ namespace MagicLeap.MRTK.Input
     /// </remarks>
     // ML CHANGE: Menu path change
     [AddComponentMenu("MRTK/Input/Visualizers/Magic Leap Rigged Hand Mesh Visualizer")]
-    // ML CHANGE: Class name change
+    // BEGIN ML CHANGE: Class name change, and support for MRTK3 v4
     public class MagicLeapRiggedHandMeshVisualizer : MonoBehaviour
+#if MRTK_INPUT_4_0_0_OR_NEWER
+        , ISelectInputVisualizer
+#endif
+    // END ML CHANGE
     {
         [SerializeField]
         [Tooltip("The XRNode on which this hand is located.")]
@@ -88,8 +96,31 @@ namespace MagicLeap.MRTK.Input
         // Scratch list for checking for the presence of display subsystems.
         private List<XRDisplaySubsystem> displaySubsystems = new List<XRDisplaySubsystem>();
 
+        // BEGIN ML CHANGE:  Implement ISelectInputVisualizer interface when using MRTK3 version
+        //                   4.0.0 or newer.  Also disable deprecated member warning for
+        //                   XRBaseController.
+#if MRTK_INPUT_4_0_0_OR_NEWER
+        private XRInputButtonReader selectInput = null;
+
+        #region ISelectInputVisualizer implementation
+
+        /// <summary>
+        /// Input reader used when pinch selecting an interactable.
+        /// </summary>
+        public XRInputButtonReader SelectInput
+        {
+            get => selectInput;
+            set => selectInput = value;
+        }
+
+        #endregion ISelectInputVisualizer implementation
+#endif
+
         // The XRController that is used to determine the pinch strength (i.e., select value!)
+#pragma warning disable CS0618 // Type or member is obsolete
         private XRBaseController controller;
+#pragma warning restore CS0618 // Type or member is obsolete
+        // END ML CHANGE
 
         // The actual, physical, rigged joints that drive the skinned mesh.
         // Otherwise referred to as "armature". Must be in OpenXR order.
@@ -353,18 +384,40 @@ namespace MagicLeap.MRTK.Input
 
         private void UpdateHandMaterial()
         {
-            if (controller == null)
+            // BEGIN ML CHANGE:  Get pinch amount depending on which version of the rig this hand model
+            //                   is in, legacy or new XRI 3+ rig.
+            if (handRenderer == null)
             {
-                controller = GetComponentInParent<XRBaseController>();
+                return;
             }
 
-            if (controller == null || handRenderer == null) { return; }
+            float selectValue = 0.0f;
+
+#if MRTK_INPUT_4_0_0_OR_NEWER
+            if (selectInput == null || !selectInput.TryReadValue(out selectValue))
+            {
+#else
+            {
+#endif
+                if (controller == null)
+                {
+#pragma warning disable CS0618 // XRBaseController is obsolete
+                    controller = GetComponentInParent<XRBaseController>();
+#pragma warning restore CS0618 // XRBaseController is obsolete
+                }
+
+                if (controller != null)
+                {
+                    selectValue = controller.selectInteractionState.value;
+                }
+            }
 
             // Update the hand material
-            float pinchAmount = Mathf.Pow(controller.selectInteractionState.value, 2.0f);
+            float pinchAmount = Mathf.Pow(selectValue, 2.0f);
             handRenderer.GetPropertyBlock(propertyBlock);
             propertyBlock.SetFloat(pinchAmountMaterialProperty, pinchAmount);
             handRenderer.SetPropertyBlock(propertyBlock);
+            // END ML CHANGE
         }
     }
 }

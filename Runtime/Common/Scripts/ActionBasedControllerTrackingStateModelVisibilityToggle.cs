@@ -18,6 +18,7 @@ namespace MagicLeap.MRTK
     /// Component to manage the visibility of an ActionBasedController's model based on
     /// the status of the TrackingState input action.
     /// </summary>
+#pragma warning disable CS0618 // ActionBasedController is obsolete
     [RequireComponent(typeof(ActionBasedController))]
     public class ActionBasedControllerTrackingStateModelVisibilityToggle : MonoBehaviour
     {
@@ -27,6 +28,7 @@ namespace MagicLeap.MRTK
         private void Awake()
         {
             actionBasedController = GetComponent<ActionBasedController>();
+#pragma warning restore CS0618 // ActionBasedController is obsolete
 
             // Hide model initially and update to visible once we have valid tracking state.
             HideControllerModel(true);

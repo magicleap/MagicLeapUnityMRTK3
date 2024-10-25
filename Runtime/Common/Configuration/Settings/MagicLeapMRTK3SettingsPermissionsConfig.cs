@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Android;
 using System.Xml;
 using UnityEngine.XR.MagicLeap;
 using static UnityEngine.XR.MagicLeap.InputSubsystem.Extensions;
@@ -18,6 +19,12 @@ using MLHands = UnityEngine.XR.MagicLeap.InputSubsystem.Extensions.MLHandTrackin
 
 #if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
 using MagicLeap.Android;
+#endif
+
+#if MAGICLEAP_UNITY_SDK_2_3_0_OR_NEWER
+using MLPermissionStrings = MagicLeap.Android.Permissions;
+#else
+using MLPermissionStrings = UnityEngine.XR.MagicLeap.MLPermission;
 #endif
 
 #if UNITY_EDITOR
@@ -72,15 +79,15 @@ namespace MagicLeap.MRTK.Settings
         [HideInInspector]
         private List<PermissionConfig> dangerousPermissions = new List<PermissionConfig>()
         {
-            new PermissionConfig(){ permission = MLPermission.Camera,            label = "CAMERA",              enabled = false },
-            new PermissionConfig(){ permission = MLPermission.RecordAudio,       label = "RECORD_AUDIO",        enabled = false },
-            new PermissionConfig(){ permission = MLPermission.EyeTracking,       label = "EYE_TRACKING",        enabled = false },
-            new PermissionConfig(){ permission = MLPermission.VoiceInput,        label = "VOICE_INPUT",         enabled = false },
-            new PermissionConfig(){ permission = MLPermission.PupilSize,         label = "PUPIL_SIZE",          enabled = false },
-            new PermissionConfig(){ permission = MLPermission.SpatialMapping,    label = "SPATIAL_MAPPING",     enabled = false },
-            new PermissionConfig(){ permission = MLPermission.DepthCamera,       label = "DEPTH_CAMERA",        enabled = false },
-            new PermissionConfig(){ permission = MLPermission.EyeCamera,         label = "EYE_CAMERA",          enabled = false },
-            new PermissionConfig(){ permission = MLPermission.SpaceImportExport, label = "SPACE_IMPORT_EXPORT", enabled = false },
+            new PermissionConfig(){ permission = Permission.Camera,                     label = "CAMERA",              enabled = false },
+            new PermissionConfig(){ permission = Permission.Microphone,                 label = "RECORD_AUDIO",        enabled = false },
+            new PermissionConfig(){ permission = MLPermissionStrings.EyeTracking,       label = "EYE_TRACKING",        enabled = false },
+            new PermissionConfig(){ permission = MLPermissionStrings.VoiceInput,        label = "VOICE_INPUT",         enabled = false },
+            new PermissionConfig(){ permission = MLPermissionStrings.PupilSize,         label = "PUPIL_SIZE",          enabled = false },
+            new PermissionConfig(){ permission = MLPermissionStrings.SpatialMapping,    label = "SPATIAL_MAPPING",     enabled = false },
+            new PermissionConfig(){ permission = MLPermissionStrings.DepthCamera,       label = "DEPTH_CAMERA",        enabled = false },
+            new PermissionConfig(){ permission = MLPermissionStrings.EyeCamera,         label = "EYE_CAMERA",          enabled = false },
+            new PermissionConfig(){ permission = MLPermissionStrings.SpaceImportExport, label = "SPACE_IMPORT_EXPORT", enabled = false },
         };
         public IList<PermissionConfig> DangerousPermissions => dangerousPermissions.AsReadOnly();
 
@@ -88,9 +95,9 @@ namespace MagicLeap.MRTK.Settings
         [HideInInspector]
         private List<PermissionConfig> normalPermissions = new List<PermissionConfig>()
         {
-            new PermissionConfig(){ permission = MLPermission.HandTracking,   label = "HAND_TRACKING",   enabled = true },
-            //new PermissionConfig(){ permission = MLPermission.MarkerTracking, label = "MARKER_TRACKING", enabled = false },
-            //new PermissionConfig(){ permission = MLPermission.SpatialAnchors, label = "SPATIAL_ANCHOR",  enabled = false },
+            new PermissionConfig(){ permission = MLPermissionStrings.HandTracking,   label = "HAND_TRACKING",   enabled = true },
+            //new PermissionConfig(){ permission = MLPermissionStrings.MarkerTracking, label = "MARKER_TRACKING", enabled = false },
+            //new PermissionConfig(){ permission = MLPermissionStrings.SpatialAnchors, label = "SPATIAL_ANCHOR",  enabled = false },
             // No simple startTracking() call for these.
 
         };
@@ -346,7 +353,7 @@ namespace MagicLeap.MRTK.Settings
             // Initially only supporting auto start tracking of eyes
             switch (permission)
             {
-                case MLPermission.EyeTracking:
+                case MLPermissionStrings.EyeTracking:
                     MLEyes.StartTracking();
                     break;
                 default: break;
@@ -384,7 +391,7 @@ namespace MagicLeap.MRTK.Settings
             // Initially only supporting auto start tracking of hands
             switch (permission)
             {
-                case MLPermission.HandTracking:
+                case MLPermissionStrings.HandTracking:
                     MLHands.StartTracking();
                     break;
                 default: break;

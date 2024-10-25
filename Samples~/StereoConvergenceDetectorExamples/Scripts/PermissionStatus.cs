@@ -39,7 +39,9 @@ namespace MagicLeap.MRTK.Samples.StereoConvergenceDetector
 
         private void checkEyeTrackingPermissionStatus()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             MLResult eyeTrackingPermResult = MLPermissions.CheckPermission(MLPermission.EyeTracking);
+#pragma warning restore CS0618 // Type or member is obsolete
             bool isGranted = eyeTrackingPermResult.IsOk ? true : false;
             setVisualColor(isGranted);
             setStatusMessage(eyeTrackingPermResult.Result.ToString());

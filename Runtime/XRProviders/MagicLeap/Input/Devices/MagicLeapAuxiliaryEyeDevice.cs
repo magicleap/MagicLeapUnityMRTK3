@@ -27,6 +27,12 @@ using MagicLeap.MRTK.Settings;
 using MagicLeap.Android;
 #endif
 
+#if MAGICLEAP_UNITY_SDK_2_3_0_OR_NEWER
+using MLPermissionStrings = MagicLeap.Android.Permissions;
+#else
+using MLPermissionStrings = UnityEngine.XR.MagicLeap.MLPermission;
+#endif
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -196,9 +202,9 @@ namespace MagicLeap.MRTK.Input
         {
             bool eyeTrackingPermissionGranted = false;
 #if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
-            eyeTrackingPermissionGranted = Permissions.CheckPermission(MLPermission.EyeTracking);
+            eyeTrackingPermissionGranted = Permissions.CheckPermission(MLPermissionStrings.EyeTracking);
 #else
-            eyeTrackingPermissionGranted = MLPermissions.CheckPermission(MLPermission.EyeTracking).IsOk;
+            eyeTrackingPermissionGranted = MLPermissions.CheckPermission(MLPermissionStrings.EyeTracking).IsOk;
 #endif
             if (eyeTrackingPermissionGranted)
             {

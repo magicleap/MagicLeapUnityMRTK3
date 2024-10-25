@@ -24,6 +24,12 @@ using MagicLeap.MRTK.Settings;
 using MagicLeap.Android;
 #endif
 
+#if MAGICLEAP_UNITY_SDK_2_3_0_OR_NEWER
+using MLPermissionStrings = MagicLeap.Android.Permissions;
+#else
+using MLPermissionStrings = UnityEngine.XR.MagicLeap.MLPermission;
+#endif
+
 using System.Threading;
 #endif
 
@@ -75,9 +81,9 @@ namespace MagicLeap.MRTK.Input
 
 #if UNITY_ANDROID && !UNITY_EDITOR
 #if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
-                mlVoicePermissionGranted = Permissions.CheckPermission(MLPermission.VoiceInput);
+                mlVoicePermissionGranted = Permissions.CheckPermission(MLPermissionStrings.VoiceInput);
 #else
-                mlVoicePermissionGranted = MLPermissions.CheckPermission(MLPermission.VoiceInput).IsOk;
+                mlVoicePermissionGranted = MLPermissions.CheckPermission(MLPermissionStrings.VoiceInput).IsOk;
 #endif
                 mlVoiceEnabled = JavaUtils.GetSystemSetting<int>("getInt", "enable_voice_cmds") == 1;
                 if (!MLVoiceReady)
@@ -91,9 +97,9 @@ namespace MagicLeap.MRTK.Input
                         mainSyncContext.Post(_ =>
                         {
 #if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
-                            mlVoicePermissionGranted = Permissions.CheckPermission(MLPermission.VoiceInput);
+                            mlVoicePermissionGranted = Permissions.CheckPermission(MLPermissionStrings.VoiceInput);
 #else
-                            mlVoicePermissionGranted = MLPermissions.CheckPermission(MLPermission.VoiceInput).IsOk;
+                            mlVoicePermissionGranted = MLPermissions.CheckPermission(MLPermissionStrings.VoiceInput).IsOk;
 #endif
                             mlVoiceEnabled = JavaUtils.GetSystemSetting<int>("getInt", "enable_voice_cmds") == 1;
                             if (MLVoiceReady)

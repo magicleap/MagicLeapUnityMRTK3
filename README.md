@@ -4,20 +4,26 @@ This package enables and provides utilities for MRTK3 development on the Magic L
 
 ## Features
 
-| Input Support | *Description* |
+### Platform Support
+
+| Input | *Description* |
 |--|--|
 | ML2 Controller | *Support for the Magic Leap 2 Controller, with rig interactor prefab and visual model.* |
 | Hand Tracking | *Support for hand tracking, with options to choose the hand ray type and multimodal mode when used in conjunction with the ML2 Controller.* |
 | Eye Tracking | *Support for eye tracking and eye gaze interactions.* |
 | Keyword Recognition | *Support for MRTK3's Keyword Recognition Subsystem, along with "See it, Say it" labels.* |
-    
-| Utilities | *Description* |
+
+### Utilities
+
+| Name | *Description* |
 |--|--|
 | Magic Leap Settings | *Our settings provide various options and utilities to make development easier on the Magic Leap 2.  This includes things like automatic permission requests and runtime configuration of the default MRTK rig for input compatibility and optimization on ML2.* |
-| StereoConvergenceDetector | *A utility prefab that can be used in a scene to assist in detecting the user's focus point (what they are looking at) and setting Magic Leap 2's camera focus distance.  Setting the focus distance properly provides better capture alignment along with reducing "judder" on device.  Located in `/Runtime/Common/Prefabs/StereoConvergenceDetector/`.* |
-| TrackedHandJointVisualizer | *A utility prefab to visualize the tracked hand joints with labeled keypoints.  Located in `/Runtime/Common/Prefabs/TrackedHandJointVisuals/`.* |
-    
-| Samples | *Description* |
+| StereoConvergenceDetector | *A utility prefab that can be used in a scene to assist in detecting the user's focus point (what they are looking at) and setting Magic Leap 2's camera focus distance.  Setting the focus distance properly provides better capture alignment along with reducing "judder" on device.  Located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Prefabs<wbr>/<wbr>StereoConvergenceDetector/.* |
+| TrackedHandJointVisualizer | *A utility prefab to visualize the tracked hand joints with labeled keypoints.  Located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Prefabs<wbr>/<wbr>TrackedHandJointVisuals/.* |
+
+### Samples
+
+| Name | *Description* |
 |--|--|
 | Hand And Controller Interaction Examples | *Demonstrates both hand and Magic Leap 2 Controller interactions at the same time.* |
 | Eye Tracking Examples | *Demonstrates eye tracking and eye gaze interactions.* |

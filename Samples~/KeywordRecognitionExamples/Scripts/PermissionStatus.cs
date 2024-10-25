@@ -39,7 +39,9 @@ namespace MagicLeap.MRTK.Samples.KeywordRecognition
 
         private void checkVoiceInputPermissionStatus()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             MLResult voiceInputPermResult = MLPermissions.CheckPermission(MLPermission.VoiceInput);
+#pragma warning restore CS0618 // Type or member is obsolete
             bool isGranted = voiceInputPermResult.IsOk ? true : false;
             setVisualColor(isGranted);
             setStatusMessage(voiceInputPermResult.Result.ToString());

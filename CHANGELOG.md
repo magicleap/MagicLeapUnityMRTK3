@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0
+### Features
+ 
+- Provide compatibility with the MRTK3 version 4.0.0 release.
+  - Package functionality and options will continue to work with either MRTK3 version 3.0.0+ or version 4.0.0+ releases.
+  - The runtime rig configuration option will work with either the legacy (version 3.0.0) MRTK rig or the new (version 4.0.0) MRTK rig.
+
+### Bugfixes
+
+- Fixed an issue with detecting when the package systems are running on a Magic Leap 2 platform for secondary users, now enabling certain package functionality in this case where it was previously disabled.
+
 ## 1.1.0
 ### Features
  

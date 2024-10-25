@@ -34,6 +34,12 @@ using UnityEngine.XR.OpenXR.Features.MagicLeapSupport;
 using MagicLeap.Android;
 #endif
 
+#if MAGICLEAP_UNITY_SDK_2_3_0_OR_NEWER
+using MLPermissionStrings = MagicLeap.Android.Permissions;
+#else
+using MLPermissionStrings = UnityEngine.XR.MagicLeap.MLPermission;
+#endif
+
 #if UNITY_EDITOR
 using UnityEditor.XR.Management;
 #endif
@@ -212,7 +218,7 @@ namespace MagicLeap.MRTK.Utilities
                 var permissionsConfig = MagicLeapMRTK3Settings.Instance.GetSettingsObject<MagicLeapMRTK3SettingsPermissionsConfig>();
                 if (permissionsConfig != null)
                 {
-                    permissionsConfig.AddDangerousPermissionToRequest(MLPermission.EyeTracking);
+                    permissionsConfig.AddDangerousPermissionToRequest(MLPermissionStrings.EyeTracking);
                 }
             }
         }
@@ -368,9 +374,9 @@ namespace MagicLeap.MRTK.Utilities
                 // Eye Tracking option
                 if (eyeTrackingOption != EyeTrackingOptions.DoNotUseEyeTracking_UseHeadpose &&
 #if MAGICLEAP_UNITY_SDK_2_1_0_OR_NEWER
-                    Permissions.CheckPermission(MLPermission.EyeTracking) &&
+                    Permissions.CheckPermission(MLPermissionStrings.EyeTracking) &&
 #else
-                    MLPermissions.CheckPermission(MLPermission.EyeTracking).IsOk &&
+                    MLPermissions.CheckPermission(MLPermissionStrings.EyeTracking).IsOk &&
 #endif
                     GetEyeFixationPoint(out Vector3 fixationPoint))
                 {

@@ -10,6 +10,7 @@
 
 using MixedReality.Toolkit;
 using MixedReality.Toolkit.Input;
+using System.Collections.Generic;
 using Unity.XR.CoreUtils;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -69,20 +70,24 @@ namespace MagicLeap.MRTK.Samples.SpatialAwareness
             }
 
             // Swap out left/right hand mesh prefab
-            ArticulatedHandController[] handControllers = GetComponentsInChildren<ArticulatedHandController>();
-            SetHandControllerModelPrefab(handControllers, openXRHandMeshPrefab_Left, XRNode.LeftHand);
-            SetHandControllerModelPrefab(handControllers, openXRHandMeshPrefab_Right, XRNode.RightHand);
+            if (MRTKRigUtils.TryFindHandControllers(out var handControllers))
+            {
+                SetHandControllerModelPrefab(handControllers, openXRHandMeshPrefab_Left, XRNode.LeftHand);
+                SetHandControllerModelPrefab(handControllers, openXRHandMeshPrefab_Right, XRNode.RightHand);
+            }
 
-            void SetHandControllerModelPrefab(ArticulatedHandController[] handControllers, GameObject prefab, XRNode handNode)
+            void SetHandControllerModelPrefab(Dictionary<XRNode, GameObject> handControllers, GameObject prefab, XRNode handNode)
             {
                 if (prefab != null)
                 {
-                    foreach (ArticulatedHandController handController in handControllers)
+                    if (handControllers.TryGetValue(handNode, out GameObject handController))
                     {
-                        if (handController.HandNode == handNode)
+#pragma warning disable CS0612 // Type or member is obsolete
+                        if (handController.TryGetComponent(out ArticulatedHandController articulatedHandController))
                         {
-                            handController.modelPrefab = prefab.transform;
+                            articulatedHandController.modelPrefab = prefab.transform;
                         }
+#pragma warning restore CS0612 // Type or member is obsolete
                     }
                 }
             }

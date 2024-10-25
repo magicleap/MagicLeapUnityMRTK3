@@ -39,7 +39,9 @@ namespace MagicLeap.MRTK.Samples.SpatialAwareness
 
         private void CheckSpatialMappingPermissionStatus()
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             MLResult spatialMappingPermResult = MLPermissions.CheckPermission(MLPermission.SpatialMapping);
+#pragma warning restore CS0618 // Type or member is obsolete
             bool isGranted = spatialMappingPermResult.IsOk ? true : false;
             SetVisualColor(isGranted);
             SetStatusMessage(spatialMappingPermResult.Result.ToString());

@@ -223,20 +223,31 @@ namespace MagicLeap.MRTK.Settings
 
                 // Set hand mesh model prefabs if specified
                 // Do this first so as to not potentially alter added Controllers
-                ArticulatedHandController[] handControllers = mrtkRig.GetComponentsInChildren<ArticulatedHandController>();
-                SetHandControllerModelPrefab(handControllers, LeftHandModelPrefab, XRNode.LeftHand);
-                SetHandControllerModelPrefab(handControllers, RightHandModelPrefab, XRNode.RightHand);
+                if (MRTKRigUtils.TryFindHandControllers(out var handControllers))
+                {
+                    SetHandControllerModelPrefab(handControllers, LeftHandModelPrefab, XRNode.LeftHand);
+                    SetHandControllerModelPrefab(handControllers, RightHandModelPrefab, XRNode.RightHand);
+                }
 
-                void SetHandControllerModelPrefab(ArticulatedHandController[] handControllers, GameObject prefab, XRNode handNode)
+                void SetHandControllerModelPrefab(Dictionary<XRNode, GameObject> handControllers, GameObject prefab, XRNode handNode)
                 {
                     if (prefab != null)
                     {
-                        foreach (ArticulatedHandController handController in handControllers)
+                        if (handControllers.TryGetValue(handNode, out GameObject handController))
                         {
-                            if (handController.HandNode == handNode)
+#pragma warning disable CS0612 // Type or member is obsolete
+                            if (handController.TryGetComponent(out ArticulatedHandController articulatedHandController))
                             {
-                                handController.modelPrefab = prefab.transform;
+                                articulatedHandController.modelPrefab = prefab.transform;
                             }
+#pragma warning restore CS0612 // Type or member is obsolete
+                             
+#if MRTK_INPUT_4_0_0_OR_NEWER
+                            if (handController.TryGetComponent(out HandModel handModel))
+                            {
+                                handModel.ModelPrefab = prefab.transform;
+                            }
+#endif
                         }
                     }
                 }
