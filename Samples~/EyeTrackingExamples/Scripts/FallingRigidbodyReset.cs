@@ -35,7 +35,11 @@ namespace MagicLeap.MRTK.Samples.EyeTracking
         {
             if (rigidBody.position.y < verticalThreshold)
             {
+#if UNITY_6000_0_OR_NEWER
+                rigidBody.linearVelocity = Vector3.zero;
+#else
                 rigidBody.velocity = Vector3.zero;
+#endif
                 rigidBody.angularVelocity = Vector3.zero;
                 transform.localPosition = initialLocalPose.position;
                 transform.localRotation = initialLocalPose.rotation;

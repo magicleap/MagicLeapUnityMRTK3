@@ -77,7 +77,8 @@ namespace MagicLeap.MRTK.Settings
 
         [SerializeField]
         [HideInInspector]
-        private List<PermissionConfig> dangerousPermissions = new List<PermissionConfig>()
+        private List<PermissionConfig> dangerousPermissions = new List<PermissionConfig>(defaultDangerousPermissions);
+        private static readonly List<PermissionConfig> defaultDangerousPermissions = new List<PermissionConfig>()
         {
             new PermissionConfig(){ permission = Permission.Camera,                     label = "CAMERA",              enabled = false },
             new PermissionConfig(){ permission = Permission.Microphone,                 label = "RECORD_AUDIO",        enabled = false },
@@ -88,12 +89,14 @@ namespace MagicLeap.MRTK.Settings
             new PermissionConfig(){ permission = MLPermissionStrings.DepthCamera,       label = "DEPTH_CAMERA",        enabled = false },
             new PermissionConfig(){ permission = MLPermissionStrings.EyeCamera,         label = "EYE_CAMERA",          enabled = false },
             new PermissionConfig(){ permission = MLPermissionStrings.SpaceImportExport, label = "SPACE_IMPORT_EXPORT", enabled = false },
+            new PermissionConfig(){ permission = MLPermissionStrings.FacialExpression,  label = "FACIAL_EXPRESSION",   enabled = false },
         };
         public IList<PermissionConfig> DangerousPermissions => dangerousPermissions.AsReadOnly();
 
         [SerializeField]
         [HideInInspector]
-        private List<PermissionConfig> normalPermissions = new List<PermissionConfig>()
+        private List<PermissionConfig> normalPermissions = new List<PermissionConfig>(defaultNormalPermissions);
+        private static readonly List<PermissionConfig> defaultNormalPermissions = new List<PermissionConfig>()
         {
             new PermissionConfig(){ permission = MLPermissionStrings.HandTracking,   label = "HAND_TRACKING",   enabled = true },
             //new PermissionConfig(){ permission = MLPermissionStrings.MarkerTracking, label = "MARKER_TRACKING", enabled = false },
@@ -108,6 +111,13 @@ namespace MagicLeap.MRTK.Settings
                  "  This provides API to handle permission callbacks.")]
         private GameObject permissionCallbackHandler = null;
         public GameObject PermissionCallbackHandler => permissionCallbackHandler;
+
+        [SerializeField]
+        [HideInInspector]
+        [Tooltip("Manually specify additional permissions to be auto requested that are not enumerated above. "+
+                 "Please use the full permission string ie: \"com.magicleap.permission.EYE_TRACKING\" ")]
+        private List<string> additionalPermissions = null;
+        public IList<string> AdditionalPermissions => additionalPermissions.AsReadOnly();
 
         public event Action<string> PermissionGranted = null;
         public event Action<string> PermissionDenied = null;
@@ -185,10 +195,29 @@ namespace MagicLeap.MRTK.Settings
                                                                         new GUIContent(dangerousEnableLabel));
             EditorGUIUtility.labelWidth = originalLabelWidth;
             {
-                // Draw Dangerous Permissions group and associated callback handler field
+                // Draw Dangerous Permissions group, additional permissions to request,
+                // and associated callback handler field
                 DrawPermissions("Dangerous Permissions", DangerousPermissionsTooltip, "dangerousPermissions");
                 EditorGUIUtility.labelWidth = originalLabelWidth;
                 EditorGUILayout.Space(4);
+                EditorGUI.indentLevel++;
+                SerializedProperty additionalPermissions = serializedObject.FindProperty("additionalPermissions");
+                EditorGUILayout.PropertyField(additionalPermissions, new GUIContent("Additional Permissions:"));
+                EditorGUI.indentLevel--;
+                for (int i = 0; i < additionalPermissions.arraySize; ++i)
+                {
+                    string additionalPermissionStr = additionalPermissions.GetArrayElementAtIndex(i).stringValue;
+                    if (!string.IsNullOrEmpty(additionalPermissionStr) && !manifestPermissions.Contains(additionalPermissionStr))
+                    {
+                        EditorGUI.indentLevel++;
+                        string message = $"The {additionalPermissionStr} permission was not found in the AndroidManifest.xml file.\n" +
+                                            $"Add <uses-permission android:name=\"{additionalPermissionStr}\" /> to the AndroidManifest.xml file,\n" +
+                                            "or use Project Settings -> Magicleap -> Permissions, if present, and select the permission there.";
+                        EditorGUILayout.HelpBox(message, MessageType.Warning);
+                        EditorGUI.indentLevel--;
+                    }
+                }
+                EditorGUILayout.Space(10);
                 EditorGUILayout.PropertyField(serializedObject.FindProperty("permissionCallbackHandler"),
                     new GUIContent("Callback Handler"));
             }
@@ -231,6 +260,46 @@ namespace MagicLeap.MRTK.Settings
             return permissionsInManifest;
         }
 
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            void VerifyDefaultPermissions(List<PermissionConfig> defaultPermissions, string propertyName)
+            {
+                SerializedProperty serializedPermissions = serializedObject.FindProperty(propertyName);
+                if (serializedPermissions != null)
+                {
+                    // Save previously enabled state
+                    Dictionary<string, bool> serializedPermissionsEnabled = new Dictionary<string, bool>();
+                    for (int i = 0; i < serializedPermissions.arraySize; ++i)
+                    {
+                        string permission = serializedPermissions.GetArrayElementAtIndex(i).FindPropertyRelative("permission").stringValue;
+                        bool enabled = serializedPermissions.GetArrayElementAtIndex(i).FindPropertyRelative("enabled").boolValue;
+                        if (!serializedPermissionsEnabled.ContainsKey(permission))
+                        {
+                            serializedPermissionsEnabled.Add(permission, enabled);
+                        }
+                    }
+                    // Repopulate serialized list
+                    serializedPermissions.ClearArray();
+                    foreach (var permissionConfig in defaultPermissions)
+                    {
+                        int newIndex = serializedPermissions.arraySize;
+                        serializedPermissions.InsertArrayElementAtIndex(newIndex);
+                        serializedPermissions.GetArrayElementAtIndex(newIndex).FindPropertyRelative("permission").stringValue = permissionConfig.permission;
+                        serializedPermissions.GetArrayElementAtIndex(newIndex).FindPropertyRelative("label").stringValue = permissionConfig.label;
+                        bool enabled = serializedPermissionsEnabled.TryGetValue(permissionConfig.permission, out bool wasEnabled) ? wasEnabled : permissionConfig.enabled;
+                        serializedPermissions.GetArrayElementAtIndex(newIndex).FindPropertyRelative("enabled").boolValue = enabled;
+                    }
+                }
+            }
+
+            VerifyDefaultPermissions(defaultDangerousPermissions, "dangerousPermissions");
+            VerifyDefaultPermissions(defaultNormalPermissions, "normalPermissions");
+
+            serializedObject.ApplyModifiedPropertiesWithoutUndo();
+        }
+
 #endif // UNITY_EDITOR
 
         /// <inheritdoc/>
@@ -254,6 +323,14 @@ namespace MagicLeap.MRTK.Settings
                         {
                             dangerousPermissionsRequestList.Add(dangerousPermission.permission);
                         }
+                    }
+                }
+                foreach (string additionalPermission in AdditionalPermissions)
+                {
+                    // Add our additionalPermissions to the list
+                    if (!dangerousPermissionsRequestList.Contains(additionalPermission))
+                    {
+                        dangerousPermissionsRequestList.Add(additionalPermission);
                     }
                 }
             }

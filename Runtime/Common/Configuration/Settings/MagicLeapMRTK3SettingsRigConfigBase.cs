@@ -289,7 +289,7 @@ namespace MagicLeap.MRTK.Settings
 
                     // Now that XRControllers have been dynamically added to the rig, find the
                     // InteractionModeManager and have it re-initialize interaction mode detectors.
-                    InteractionModeManager modeManager = GameObject.FindObjectOfType<InteractionModeManager>();
+                    InteractionModeManager modeManager = Object.FindAnyObjectByType<InteractionModeManager>();
                     if (modeManager != null)
                     {
                         modeManager.InitializeInteractionModeDetectors();

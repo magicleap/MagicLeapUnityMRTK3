@@ -1,7 +1,7 @@
 // %BANNER_BEGIN%
 // ---------------------------------------------------------------------
 // %COPYRIGHT_BEGIN%
-// Copyright (c) (2018-2022) Magic Leap, Inc. All Rights Reserved.
+// Copyright (c) (2022-2024) Magic Leap, Inc. All Rights Reserved.
 // Use of this file is governed by the Software License Agreement, located here: https://www.magicleap.com/software-license-agreement-ml2
 // Terms and conditions applicable to third-party materials accompanying this distribution may also be found in the top-level NOTICE file appearing herein.
 // %COPYRIGHT_END%
@@ -50,6 +50,18 @@ namespace MagicLeap.MRTK.Settings
         private GameObject magicLeapInputSimulatorPrefab;
         public GameObject MagicLeapInputSimulatorPrefab => magicLeapInputSimulatorPrefab;
 
+        public enum ConvertPackageMaterialsOption
+        {
+            Never,
+            Prompt,
+            AlwaysNoPrompt
+        }
+
+        [SerializeField]
+        [Tooltip("Options to automatically convert package materials to the current rendering pipeline when detecting use of URP or HDRP.")]
+        private ConvertPackageMaterialsOption convertPackageMaterials = ConvertPackageMaterialsOption.Prompt;
+        public ConvertPackageMaterialsOption ConvertPackageMaterials => convertPackageMaterials;
+
         /// <inheritdoc/>
         public override bool RequiresML2Runtime => false;
 
@@ -64,16 +76,34 @@ namespace MagicLeap.MRTK.Settings
         /// <inheritdoc/>
         public override void DrawSettingsWindowContent()
         {
-            EditorGUILayout.LabelField("Magic Leap Input Simulator", EditorStyles.boldLabel);
+            {
+                EditorGUILayout.LabelField("Magic Leap Input Simulator", EditorStyles.boldLabel);
 
-            float originalLabelWidth = EditorGUIUtility.labelWidth;
-            const string addInputSimulatorLabel = "Add simulator prefab to scenes in Editor play mode";
-            EditorGUIUtility.labelWidth = EditorStyles.label.CalcSize(new GUIContent(addInputSimulatorLabel)).x + 10.0f;
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("addMagicLeapInputSimulator"),
-                                                                        new GUIContent(addInputSimulatorLabel));
+                EditorGUI.indentLevel++;
+                float originalLabelWidth = EditorGUIUtility.labelWidth;
+                const string propertyLabel = "Add simulator prefab to scenes in Editor play mode";
+                EditorGUIUtility.labelWidth = EditorStyles.label.CalcSize(new GUIContent(propertyLabel)).x + 20.0f;
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("addMagicLeapInputSimulator"),
+                                                                            new GUIContent(propertyLabel));
 
-            EditorGUILayout.PropertyField(serializedObject.FindProperty("magicLeapInputSimulatorPrefab"));
-            EditorGUIUtility.labelWidth = originalLabelWidth;
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("magicLeapInputSimulatorPrefab"));
+                EditorGUIUtility.labelWidth = originalLabelWidth;
+                EditorGUI.indentLevel--;
+            }
+
+            EditorGUILayout.Space(8);
+
+            {
+                EditorGUILayout.LabelField("Package Material Upgrades", EditorStyles.boldLabel);
+
+                EditorGUI.indentLevel++;
+                float originalLabelWidth = EditorGUIUtility.labelWidth;
+                const string propertyLabel = "Convert package materials when using URP/HDRP";
+                EditorGUIUtility.labelWidth = EditorStyles.label.CalcSize(new GUIContent(propertyLabel)).x + 20.0f;
+                EditorGUILayout.PropertyField(serializedObject.FindProperty("convertPackageMaterials"),
+                                                                            new GUIContent(propertyLabel));
+                EditorGUI.indentLevel--;
+            }
         }
 
 #endif // UNITY_EDITOR

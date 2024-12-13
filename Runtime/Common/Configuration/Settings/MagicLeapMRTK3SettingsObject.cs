@@ -105,7 +105,7 @@ namespace MagicLeap.MRTK.Settings
         /// </summary>
         protected SerializedObject serializedObject;
 
-        private void OnEnable()
+        protected virtual void OnEnable()
         {
             serializedObject = new SerializedObject(this);
         }

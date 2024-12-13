@@ -1,0 +1,113 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: ML2 Touch Surface
+  m_Shader: {fileID: 4800000, guid: d7ae17f3c68969248a443a70c2c4efa1, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords:
+  - _ALPHABLEND_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 2800000, guid: e1c02d2dd250f5540a37950be505354b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FalloffTex:
+        m_Texture: {fileID: 2800000, guid: 6fd787dff4ddac84cafd1ec3fc403e96, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0.25, y: 0.25}
+    - _GridTex:
+        m_Texture: {fileID: 2800000, guid: fd7dd05e31bcca04d86d142ff19d645c, type: 3}
+        m_Scale: {x: 25, y: 25}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 9f17f0075f402e64da5b7a039fb2ece5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0.25, y: 0.25}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ProximityTex:
+        m_Texture: {fileID: 2800000, guid: 6fd787dff4ddac84cafd1ec3fc403e96, type: 3}
+        m_Scale: {x: 1.1428572, y: 1.1428572}
+        m_Offset: {x: 0.40085134, y: -0.0696728}
+    - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TouchPoint:
+        m_Texture: {fileID: 2800000, guid: 9f17f0075f402e64da5b7a039fb2ece5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TouchPointTex:
+        m_Texture: {fileID: 2800000, guid: 9f17f0075f402e64da5b7a039fb2ece5, type: 3}
+        m_Scale: {x: 1.1428572, y: 1.1428572}
+        m_Offset: {x: 0.40085134, y: -0.0696728}
+    m_Ints: []
+    m_Floats:
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _DetailNormalMapScale: 1
+    - _DstBlend: 10
+    - _FalloffMult: 0.8
+    - _GlossMapScale: 1
+    - _Glossiness: 0.274
+    - _GlossyReflections: 1
+    - _Metallic: 0.148
+    - _Mode: 2
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _PointAlpha: 0.454
+    - _SmoothnessTextureChannel: 0
+    - _SpecularHighlights: 1
+    - _SrcBlend: 5
+    - _UVSec: 0
+    - _ZWrite: 0
+    m_Colors:
+    - _Color: {r: 0.6400854, g: 0.72606176, b: 0.8207547, a: 0.23529412}
+    - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
+    - _GridColor: {r: 0.47694907, g: 0.5499144, b: 0.6509434, a: 0.21960784}
+    - _PointColor: {r: 0.8396226, g: 0.8396226, b: 0.8396226, a: 0.21960784}
+    - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+  m_BuildTextureStacks: []

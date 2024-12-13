@@ -53,7 +53,7 @@ namespace MagicLeap.MRTK.Samples.KeywordRecognition
                     openXRController.name = openXRControllerPrefab.name;
 
                     // Re-initialize interaction mode detectors.
-                    InteractionModeManager modeManager = GameObject.FindObjectOfType<InteractionModeManager>();
+                    InteractionModeManager modeManager = Object.FindAnyObjectByType<InteractionModeManager>();
                     if (modeManager != null)
                     {
                         modeManager.InitializeInteractionModeDetectors();

@@ -229,7 +229,7 @@ MonoBehaviour:
   m_UpdateTrackingType: 0
   m_EnableInputTracking: 1
   m_EnableInputActions: 1
-  m_ModelPrefab: {fileID: 232108043645938994, guid: 76a1f0b6611fd4b4cbf3a1bdf3a41a81, type: 3}
+  m_ModelPrefab: {fileID: 715584936663005301, guid: d9371b2b60310f845bc3790991199b1e, type: 3}
   m_ModelParent: {fileID: 0}
   m_Model: {fileID: 0}
   m_AnimateModel: 0
@@ -405,6 +405,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   handProximityThreshold: 0.2
+  handSwitchTimeThreshold: 0.25
+  ignoreProximityInEditorPlayMode: 1
 --- !u!114 &-2362460906731962502
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -561,7 +563,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
   m_RaycastSnapVolumeInteraction: 1
-  m_HitClosestOnly: 0
+  m_HitClosestOnly: 1
   m_HoverToSelect: 0
   m_HoverTimeToSelect: 0.5
   m_AutoDeselect: 0

@@ -17,7 +17,7 @@ This package enables and provides utilities for MRTK3 development on the Magic L
 
 | Name | *Description* |
 |--|--|
-| Magic Leap Input Simulator | *Provides Magic Leap specific input simulation (e.g. Controller) in the Unity Editor during play mode.  To use, either enable the setting to automatically add it to the scene in Editor play mode, or manually place the prefab in the scene. Located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Simulation<wbr>/<wbr>Prefabs/.* |
+| Magic Leap Input Simulator | *Provides Magic Leap specific input simulation (e.g. ML Controller) in the Unity Editor during play mode.  To use, either enable the setting to automatically add the input simulator prefab to the scene in Editor play mode, or manually place the prefab in the scene. The prefab is located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Simulation<wbr>/<wbr>Prefabs/.* |
 | Magic Leap Settings | *Our settings provide various options and utilities to make development easier on the Magic Leap 2.  This includes things like automatic permission requests and runtime configuration of the default MRTK rig for input compatibility and optimization on ML2.* |
 | StereoConvergenceDetector | *A utility prefab that can be used in a scene to assist in detecting the user's focus point (what they are looking at) and setting Magic Leap 2's camera focus distance.  Setting the focus distance properly provides better capture alignment along with reducing "judder" on device.  Located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Prefabs<wbr>/<wbr>StereoConvergenceDetector/.* |
 | TrackedHandJointVisualizer | *A utility prefab to visualize the tracked hand joints with labeled keypoints.  Located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Prefabs<wbr>/<wbr>TrackedHandJointVisuals/.* |
@@ -46,20 +46,20 @@ Before importing the Magic Leap MRTK3 Package, developers will need to configure
 
 #### Ready-made ML2 port of the MRTK Dev Template Project
 
-There is a ready-made ML2 port of the MRTK Dev Template Project provided within several branch configurations in the [Magic Leap fork of the MRTK Github repository](https://github.com/magicleap/MixedRealityToolkit-Unity/tree/mrtk3_MagicLeap2).  This is the quickest and easiest way to get an MRTK3 app up and running on the Magic Leap 2.  To use the ported Dev Template project, clone the forked MRTK GitHub repo and check out the desired branch configuration (see below). [Official Microsoft Guide Here] (https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/getting-started/setting-up/setup-template)
+There is a ready-made ML2 port of the MRTK Dev Template Project provided within several branch configurations in the [Magic Leap fork of the MRTK Github repository](https://github.com/magicleap/MixedRealityToolkit-Unity/tree/mrtk3_MagicLeap2).  This is the quickest and easiest way to get an MRTK3 app up and running on the Magic Leap 2.  To use the ported Dev Template project, clone the forked MRTK GitHub repo and check out the desired branch configuration (see below). [Official Microsoft Guide Here](https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/getting-started/setting-up/setup-template)
 
 There are several project configurations within the Magic Leap fork repository available in separate branches:
 
-- `mrtk3_MagicLeap2` - Default configuration using the legacy ML XR provider.
-- `mrtk3_MagicLeap2_OpenXR` - Project configuration using the OpenXR provider.
-- `mrtk3_MagicLeap2_Spectator` - Project configuration using the legacy ML XR provider, URP, and with integrated Magic Leap Spectator.
-- `mrtk3_MagicLeap2_OpenXR_Spectator` - Project configuration using the OpenXR provider, URP, and with integrated Magic Leap Spectator.
+- [mrtk3_MagicLeap2](https://github.com/magicleap/MixedRealityToolkit-Unity/tree/mrtk3_MagicLeap2) - Project configuration using the legacy ML XR provider.
+- [mrtk3_MagicLeap2_OpenXR](https://github.com/magicleap/MixedRealityToolkit-Unity/tree/mrtk3_MagicLeap2_OpenXR) - Project configuration using the OpenXR provider.
+- [mrtk3_MagicLeap2_Spectator](https://github.com/magicleap/MixedRealityToolkit-Unity/tree/mrtk3_MagicLeap2_Spectator) - Project configuration using the legacy ML XR provider, URP, and with integrated Magic Leap Spectator.
+- [mrtk3_MagicLeap2_OpenXR_Spectator](https://github.com/magicleap/MixedRealityToolkit-Unity/tree/mrtk3_MagicLeap2_OpenXR_Spectator) - Project configuration using the OpenXR provider, URP, and with integrated Magic Leap Spectator.
 
 If you work with Git using the command line, you can clone the repo while specifying the branch, e.g.: `git clone --branch mrtk3_MagicLeap2 https://github.com/magicleap/MixedRealityToolkit-Unity`
 
 #### Original MRTK Dev Template Project
 
-The original MRTK Dev Template project is available by downloading the MRTK project from the [MRTK Github repository](https://github.com/MixedRealityToolkit/MixedRealityToolkit-Unity). To use the original Template project, clone MRTK from the GitHub repo and open the `MRTKDevTemplate` project under `UnityProjects` in Unity. [Official Microsoft Guide Here] (https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/getting-started/setting-up/setup-template)
+The original MRTK Dev Template project is available by downloading the MRTK project from the [MRTK Github repository](https://github.com/MixedRealityToolkit/MixedRealityToolkit-Unity). To use the original Template project, clone MRTK from the GitHub repo and open the `MRTKDevTemplate` project under `UnityProjects` in Unity. [Official Microsoft Guide Here](https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/getting-started/setting-up/setup-template)
 
 Clone the repo on the command line: `git clone  https://github.com/MixedRealityToolkit/MixedRealityToolkit-Unity.git`
 
@@ -78,9 +78,19 @@ Once the Github project is downloaded, follow the steps below to update the proj
 
 ### Creating a new MRTK3 Project
 
-This section assumes you have already configured your Unity Project for ML2. (https://developer.magicleap.cloud/learn/docs/guides/unity/getting-started/configure-unity-settings)
+This section assumes you have already [configured your Unity Project for ML2](https://developer.magicleap.cloud/learn/docs/guides/unity/getting-started/configure-unity-settings).
 
-Download the MRTK3 dependencies using one of two methods: Using the [MixedReality Feature Tool](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/unity/welcome-to-mr-feature-tool) (Windows Only), Expanded on below, or by manually downloading and importing the packages from [Github](https://github.com/MixedRealityToolkit/MixedRealityToolkit-Unity). MRTK Input and MRTK UX Components packages are required for using with Magic Leap, please review [MRTK Package Dependencies](https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/packages/packages-overview) to know which dependencies are required for those two packages.
+Download the MRTK3 dependencies using one of several methods: From the [Unity Asset Store](https://assetstore.unity.com/publishers/92188), using the [MixedReality Feature Tool](https://learn.microsoft.com/en-us/windows/mixed-reality/develop/unity/welcome-to-mr-feature-tool) (Windows Only), expanded on below, or by manually downloading and importing the packages from [Github](https://github.com/MixedRealityToolkit/MixedRealityToolkit-Unity). MRTK3 Core, Input and UX Components packages are required for use with the Magic Leap MRTK3 package, please review [MRTK Package Dependencies](https://learn.microsoft.com/en-us/windows/mixed-reality/mrtk-unity/mrtk3-overview/packages/packages-overview) to know which dependencies are required for those packages.
+
+#### Using the Unity Asset Store
+
+The MRTK3 packages are now [available from the Unity Asset Store](https://assetstore.unity.com/publishers/92188).
+
+The Magic Leap MRTK3 package requires the following minimum MRTK3 packages, which will install some additional sub-dependencies:
+
+- MRTK3 Core
+- MRTK3 Input
+- MRTK3 UX Components
 
 #### Using the Mixed Reality Feature Tool
 
@@ -88,10 +98,11 @@ This section provides instructions on installing the MRTK3 dependencies into an 
 
 1. Open the Mixed Reality Feature tool
 2. Target your Unity project.
-3. At a minimum install the following packages, as they are required:
+3. The Magic Leap MRTK3 package requires the following minimum MRTK3 packages, which will install some additional sub-dependencies:
 
-- MRTK3 / MRTK Input
-- MRTK3 / MRTK UX Components
+- MRTK3 Core
+- MRTK3 Input
+- MRTK3 UX Components
 
 *Note: If you do not see MRTK3, you may need to select the **Show preview releases** option located at the bottom of the window.*
 
@@ -107,8 +118,9 @@ Once the project is configured for ML2 and has the required MRTK3 packages, impo
 
 ### Importing from the NPMJS package registry
 
-Add the NPMJS scoped registry to your project.
+Add the NPMJS scoped registry to your project.  Go to package manager settings (**Edit** > **Project Settings** > **Package Manager**), and add the following scoped registry:
 
+- Name: Magic Leap
 - URL:  http://registry.npmjs.org
 - Scope(s): com.magicleap
 
@@ -121,27 +133,6 @@ Install the latest version of the Unity MRTK3 package from the Magic Leap Hub. T
 ## Project Setup with XR Providers
 
 There are currently two options of XR Providers that run on Magic Leap 2. Either, or both, XR Provider packages can be in the project, but only one active at a time.  See the setup instructions below to configure your project to run with either.
-
-### Magic Leap XR Provider Setup
-
-If the project contains the **com.unity.xr.magicleap** package, you can use the `Magic Leap` XR plugin.  Follow the below steps to setup the MRTK3 project to run properly with this XR Provider.
-
-1. Bring up project settings (**Edit** > **Project Settings**).
-
-2. Within project settings, go to the **XR Plug-in Management** category on the left.
-   1. Select the `Android` settings tab.
-   2. Select the `Magic Leap` provider in the list.  Make sure this is the only selected XR Provider for Android.
-
-3. Within project settings, go to the **MRTK3** category on the left.
-   1. Set the **Profile** to **MRTKProfile-MagicLeap**, found at `/Runtime/XRProviders/MagicLeap/Configuration/Default Profiles/`.
-
-4. Configure the MRTK XR Rig to be compatible with Magic Leap 2 input (2 provided options).
-   1. First option:  Use the Runtime MRTK XR Rig Configuration option in settings.
-      - Within project settings, go to the **MRTK3** > **Magic Leap Settings** category on the left.
-      - Make sure the `Magic Leap` option is selected for **Settings for XR Provider:** at the top to view specific settings for the Magic Leap XR Provider.
-      - Check the `Runtime Rig Config Enabled` checkbox at the top of the **Runtime MRTK XR Rig Configuration** window.
-         - Enabling this feature will allow the default MRTK XR Rig to work with ML2 input without needing to modify the scene.
-   2. Second option:  In your scenes, remove and replace the default MRTK XR Rig with the `MRTK XR Rig - MagicLeap` prefab variant located in `/Runtime/XRProviders/MagicLeap/Prefabs/MRTK_Variants/`.
 
 ### OpenXR XR Provider Setup
 
@@ -159,7 +150,7 @@ If the project contains the **com.unity.xr.openxr** package (version 1.9.1 or la
    2. Select the `OpenXR` provider in the list.  Make sure this is the only selected XR Provider for Android.
       - Select the `Magic Leap Feature Group`.
    3. Select the **XR Plug-in Management** > **OpenXR** category on the left for more options.
-      - Set the **Depth Submission Mode** to `Depth 16 Bit` or `None`. The `Depth 24 Bit` currently does not work on the ML2.
+      - Set the **Depth Submission Mode** to `Depth 16 Bit` (recommended) or `None`. The `Depth 24 Bit` mode is currently not supported on the ML2.
       - Make sure the following interaction profiles are added:
          - `Magic Leap 2 Controller Interaction Profile`
          - `Eye Gaze Interaction Profile`
@@ -174,14 +165,35 @@ If the project contains the **com.unity.xr.openxr** package (version 1.9.1 or la
 5. Configure the MRTK XR Rig to be compatible with Magic Leap 2 input (2 provided options).
    1. First option:  Use the Runtime MRTK XR Rig Configuration option in settings.
       - Within project settings, go to the **MRTK3** > **Magic Leap Settings** category on the left.
-      - Make sure the `OpenXR` option is selected for **Settings for XR Provider:** at the top to view specific settings for the OpenXR XR Provider.
+      - Make sure the `OpenXR` option is selected for **Settings for XR Provider:** to view specific settings for the OpenXR XR Provider.
       - Check the `Runtime Rig Config Enabled` checkbox at the top of the **Runtime MRTK XR Rig Configuration** window.
          - Enabling this feature will allow the default MRTK XR Rig to work with ML2 input without needing to modify the scene.
    2. Second option:  In your scenes, remove and replace the default MRTK XR Rig with the `MRTK XR Rig - MagicLeap - OpenXR` prefab variant located in `/Runtime/XRProviders/OpenXR/Prefabs/MRTK_Variants/`.
 
+### Magic Leap XR Provider Setup
+
+If the project contains the **com.unity.xr.magicleap** package, you can use the `Magic Leap` XR plugin.  Follow the below steps to setup the MRTK3 project to run properly with this XR Provider.
+
+1. Bring up project settings (**Edit** > **Project Settings**).
+
+2. Within project settings, go to the **XR Plug-in Management** category on the left.
+   1. Select the `Android` settings tab.
+   2. Select the `Magic Leap` provider in the list.  Make sure this is the only selected XR Provider for Android.
+
+3. Within project settings, go to the **MRTK3** category on the left.
+   1. Set the **Profile** to **MRTKProfile-MagicLeap**, found at `/Runtime/XRProviders/MagicLeap/Configuration/Default Profiles/`.
+
+4. Configure the MRTK XR Rig to be compatible with Magic Leap 2 input (2 provided options).
+   1. First option:  Use the Runtime MRTK XR Rig Configuration option in settings.
+      - Within project settings, go to the **MRTK3** > **Magic Leap Settings** category on the left.
+      - Make sure the `Magic Leap` option is selected for **Settings for XR Provider:** to view specific settings for the Magic Leap XR Provider.
+      - Check the `Runtime Rig Config Enabled` checkbox at the top of the **Runtime MRTK XR Rig Configuration** window.
+         - Enabling this feature will allow the default MRTK XR Rig to work with ML2 input without needing to modify the scene.
+   2. Second option:  In your scenes, remove and replace the default MRTK XR Rig with the `MRTK XR Rig - MagicLeap` prefab variant located in `/Runtime/XRProviders/MagicLeap/Prefabs/MRTK_Variants/`.
+
 ## Magic Leap Permissions
 
-The required Magic Leap permissions for your application must be added to the application's `AndroidManifest.xml` file.  At a minimum for MRTK3 to use hand tracking, the HAND_TRACKING permission should be added to the manifest.  This can be done in (**Edit** > **Project Settings** > **Magic Leap** > **Permissions**), if MLSDK is setup, or by adding it to the manifest file manually.  Examples:
+The required Magic Leap permissions for your application must be added to the application's `AndroidManifest.xml` file.  At a minimum for MRTK3 to use hand tracking, the HAND_TRACKING permission should be added to the manifest.  This can be done in (**Edit** > **Project Settings** > **Magic Leap** > **Permissions**) or by adding it to the manifest file manually.  Examples:
 
       <uses-permission android:name="com.magicleap.permission.HAND_TRACKING" />
       <uses-permission android:name="com.magicleap.permission.EYE_TRACKING" />

@@ -1,8 +1,9 @@
 {
     "name": "com.magicleap.mrtk3",
     "displayName": "Magic Leap MRTK3",
-    "version": "1.3.0",
-    "unity": "2022.2",
+    "version": "1.4.0",
+    "unity": "2022.3",
+    "unityRelease": "0f1",
     "description": "This package enables and provides utilities for MRTK3 development on the Magic Leap 2.",
     "keywords": [
       "magicleap",

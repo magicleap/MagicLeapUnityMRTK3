@@ -4,7 +4,12 @@
     "references": [
         "MagicLeap.MRTK3",
         "Unity.XR.CoreUtils",
-        "MixedReality.Toolkit.Core.Editor"
+        "MixedReality.Toolkit.Core.Editor",
+        "Unity.RenderPipelines.Core.Editor",
+        "Unity.RenderPipelines.Universal.Runtime",
+        "Unity.RenderPipelines.Universal.Editor",
+        "Unity.RenderPipelines.HighDefinition.Runtime",
+        "Unity.RenderPipelines.HighDefinition.Editor"
     ],
     "includePlatforms": [
         "Editor"
@@ -15,6 +20,22 @@
     "precompiledReferences": [],
     "autoReferenced": true,
     "defineConstraints": [],
-    "versionDefines": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.render-pipelines.core",
+            "expression": "",
+            "define": "UNITY_RENDER_PIPELINES_CORE"
+        },
+        {
+            "name": "com.unity.render-pipelines.universal",
+            "expression": "",
+            "define": "UNITY_RENDER_PIPELINES_UNIVERSAL"
+        },
+        {
+            "name": "com.unity.render-pipelines.high-definition",
+            "expression": "",
+            "define": "UNITY_RENDER_PIPELINES_HIGH_DEFINITION"
+        }
+    ],
     "noEngineReferences": false
 }

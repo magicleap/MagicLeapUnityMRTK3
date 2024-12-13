@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.4.0
+### Features
+
+- Added options to the dangerous permissions section in **Edit** > **Project Settings** > **MRTK3** > **Magic Leap Settings** > **Runtime Permissions Configuration**.
+  - Added FACIAL_EXPRESSION as an enumerated permission.
+  - Added the ability to manually specify additional permissions to be requested.
+- Added an updated model for the ML2 Controller with static and input-driven animated prefabs.
+  - The prefabs are located in /Runtime<wbr>/<wbr>Common<wbr>/<wbr>Prefabs<wbr>/<wbr>ML2Controller/.
+  - The provided Magic Leap MRTK3 Rig prefabs have been updated to use the new animated model by default.
+- Added utilities to offer automated and manual options to convert materials within the package when detecting use of URP or HDRP.
+  - Please see options for automatic package material conversion in **Edit** > **Project Settings** > **MRTK3** > **Magic Leap Settings**.
+  - To manually invoke package material conversion see menu item(s) at **Magic Leap** > **MRTK3** when URP or HDRP is active.
+
+### Bugfixes
+
+- Fixed an issue with the ML2 Controller prefab, MLXR provider version, where the Far Ray interactor erroneously had "Hit Closest Only" disabled.
+
 ## 1.3.0
 ### Features
  
